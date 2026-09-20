@@ -1,0 +1,47 @@
+/* Reset default browser margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar container styling */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Pushes logo to left, links to right */
+    align-items: center;            /* Vertically centers items */
+    background-color: #333;
+    padding: 15px 30px;
+}
+
+/* Logo styling */
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Unordered list styling */
+.nav-links {
+    list-style: none; /* Removes bullet points */
+    display: flex;    /* Aligns list items horizontally */
+}
+
+/* Individual list item spacing */
+.nav-links li {
+    padding: 0px 20px;
+}
+
+/* Anchor tag styling */
+.nav-links a {
+    color: white;
+    text-decoration: none; /* Removes underline */
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for links */
+.nav-links a:hover {
+    color: #ffcc00; /* Changes color when mouse hovers over link */
+}
