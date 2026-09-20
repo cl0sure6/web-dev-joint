@@ -45,3 +45,27 @@
 .nav-links a:hover {
     color: #ffcc00; /* Changes color when mouse hovers over link */
 }
+
+/* По умолчанию скрываем все секции */
+main > section {
+    display: none;
+}
+
+/* Показываем секцию, если на неё указывает хэш в URL */
+main > section:target {
+    display: block;
+}
+
+/* Если хэша нет вообще или открыт корень сайта — показываем #home */
+main > section:first-of-type {
+    display: block;
+}
+
+/* Если активен любой другой target, отключаем показ первого по умолчанию */
+main:has(> section:target) > section:first-of-type {
+    display: none;
+}
+main:has(> section:target) > section:target {
+    display: block;
+}
+
