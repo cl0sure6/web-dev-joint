@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation Bar Example</title>
+    <meta name="description" content="Find your training rhythm at FORM. Explore memberships, get to know the club, and plan your first visit.">
+    <title>FORM — A little stronger. Every day.</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <!-- Navigation Bar Container -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Main navigation">
         <!-- Logo -->
-        <div class="logo">Website</div>
+        <a href="#home" class="logo"><span class="logo-mark" aria-hidden="true">ƒ</span> FORM<span class="logo-caption">FITNESS CLUB</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">Menu <span aria-hidden="true">+</span></button>
         
         <!-- Navigation Links -->
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
+        <ul class="nav-links" id="main-navigation">
+            <li><a href="#home" aria-current="page">The club</a></li>
             <li><a href="#sport-zones">Exercise zones</a></li>
             <li><a href="#coaches">Coaches</a></li>
             <li><a href="#pricing">Pricing</a></li>
@@ -23,30 +27,93 @@
             <li><a href="#group-exercises">Group exercises</a></li>
             <li><a href="#contacts">Contacts</a></li>
         </ul>
+        <a class="nav-join" href="#pricing">Find your plan ↗</a>
     </nav>
 
-    <main>
+    <main id="main-content">
         <!-- Home -->
-        <section id="home" class="hero-section" style="min-height: 80vh;">
-            <h1>Welcome to Our Club</h1>
-            <p>Your fitness journey starts here.</p>
+        <section id="home" class="hero-section page-section" aria-labelledby="home-heading">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> MAKE ROOM FOR MOVEMENT</p>
+                    <h1 id="home-heading">A little<br>stronger.<br><span>Every day.</span></h1>
+                    <p class="hero-lead">Your pace. Your people. Your place to reset.<br>A fitness club for the life you actually live.</p>
+                    <div class="hero-actions"><a href="#pricing" class="button">Buy a membership <span aria-hidden="true">↗</span></a><a href="#group-exercises" class="text-link">Book a class <span aria-hidden="true">→</span></a></div>
+                    <div class="hero-footnote"><span class="little-mark" aria-hidden="true">✳</span><p>First time? You're in the right place.<br><a href="#contacts">Let's plan your first visit.</a></p></div>
+                </div>
+                <figure class="hero-photo">
+                    <img src="assets/gym.jpg" alt="A spacious gym with strength equipment and natural light" width="1400" height="933" fetchpriority="high">
+                    <figcaption><span>SPACE TO FIND YOUR FORM</span><span>01 / THE CLUB</span></figcaption>
+                    <div class="photo-note"><span class="eyebrow">ONE SESSION AT A TIME</span><strong>Progress<br>looks good on you.</strong><span aria-hidden="true">↗</span></div>
+                </figure>
+            </div>
+            <div class="club-strip"><span>STRENGTH</span><span aria-hidden="true">✳</span><span>MOVEMENT</span><span aria-hidden="true">✳</span><span>RECOVERY</span><span aria-hidden="true">✳</span><span>COMMUNITY</span><span aria-hidden="true">✳</span></div>
+
+            <!-- Club information and history -->
+            <section class="home-block about-block" aria-labelledby="about-heading">
+                <div><p class="eyebrow">01 / A PLACE TO BELONG</p><h2 id="about-heading">More than a workout.<br>A good part of your day.</h2></div>
+                <div class="about-copy"><p data-setting="about">A neighbourhood fitness club built around one simple idea: training should fit your life. Find your rhythm with space to lift, move, swim, and recover.</p><p data-setting="history">Our story starts with a shared love of movement. We are building a welcoming place for first sessions, fresh starts, and the routines that last.</p><span class="small-note" data-setting="opened">Opening date to be announced</span></div>
+                <div class="benefits-grid"><article><span class="benefit-number">01</span><h3>A fresh start, at any level.</h3><p>Space for beginners and regulars alike. Come as you are and build from there.</p></article><article><span class="benefit-number">02</span><h3>Find your kind of movement.</h3><p>Weights, cardio, yoga, group training, and swimming. A routine with room to change.</p></article><article><span class="benefit-number">03</span><h3>A plan that fits your life.</h3><p>From a single visit to a year of consistency. Choose the commitment that works for you.</p></article></div>
+            </section>
+
+            <section class="movement-block" aria-labelledby="movement-heading">
+                <img src="assets/movement.jpg" alt="A group stretching together in a bright training studio" width="900" height="600" loading="lazy">
+                <div><p class="eyebrow">YOUR ROUTINE, REIMAGINED</p><h2 id="movement-heading">Lift. Stretch.<br>Take a breath.</h2><p>Some days you go all in. Some days you slow down. There is space for both here.</p><a href="#sport-zones" class="button button--light">Explore the spaces ↗</a></div>
+            </section>
+
+            <!-- Section 14: News / Events -->
+            <section id="news" class="home-block" aria-labelledby="news-heading">
+                <div class="section-heading"><div><p class="eyebrow">02 / THE CLUB JOURNAL</p><h2 id="news-heading">Fresh from the club.</h2></div><span class="small-note">News, events & little updates</span></div>
+                <div id="news-grid" class="news-grid"><div class="journal-empty"><span class="journal-symbol" aria-hidden="true">↗</span><h3>Good things are in the works.</h3><p>New classes, club events, and updates will appear here. Check back soon.</p><a href="#contacts" class="text-link">Say hello to the team →</a></div></div>
+            </section>
+
+            <!-- Section 12: Reviews -->
+            <section id="reviews" class="home-block reviews-block" aria-labelledby="reviews-heading">
+                <div class="section-heading"><div><p class="eyebrow">03 / FROM OUR PEOPLE</p><h2 id="reviews-heading">Every routine has a story.</h2></div><a href="#review-form" class="text-link">Share yours ↗</a></div>
+                <div id="reviews-grid" class="reviews-grid"><div class="review-empty"><span class="quote-mark" aria-hidden="true">“</span><p>Your first session.<br>Your new personal best.<br>Your reason to come back.</p><span class="small-note">Member stories will appear here.</span></div></div>
+                <form id="review-form" class="review-form stacked-form" hidden>
+                    <h3>Tell us about your experience.</h3><p id="review-access" class="small-note">Sign in to your member account to leave a review. Member sign-in is being developed as a separate part of the project.</p>
+                    <fieldset id="review-fields" disabled><legend class="sr-only">Your review</legend><label>Rating<select name="rating" required><option value="5">5 — Excellent</option><option value="4">4 — Good</option><option value="3">3 — Okay</option><option value="2">2 — Could be better</option><option value="1">1 — Poor</option></select></label><label>Your story<textarea name="comment" maxlength="2000" rows="3" required></textarea></label><button type="submit" class="button">Submit review ↗</button></fieldset><p id="review-status" class="form-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+
+            <!-- Section 13: FAQ -->
+            <section id="faq" class="home-block faq-block" aria-labelledby="faq-heading">
+                <div><p class="eyebrow">04 / BEFORE YOU START</p><h2 id="faq-heading">A few good<br>questions.</h2><p>Still wondering about something?<br><a href="#contacts" class="text-link">We're here to help ↗</a></p></div>
+                <div id="faq-list" class="faq-list">
+                    <details><summary>How do I buy a membership?</summary><p>Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.</p></details>
+                    <details><summary>Can I cancel a class?</summary><p>Cancellation options will be available in your member account once online booking opens. Until then, contact the club to change your plans.</p></details>
+                    <details><summary>Is there a student discount?</summary><p>Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.</p></details>
+                    <details><summary>Can I use the pool?</summary><p>Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.</p></details>
+                    <details><summary>What should I bring to my first session?</summary><p>Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.</p></details>
+                </div>
+            </section>
+
+            <!-- Section 11: Contacts, hours, map, and feedback -->
+            <section id="contacts" class="home-block contacts-block" aria-labelledby="contacts-heading">
+                <div class="contact-copy"><p class="eyebrow">05 / SEE YOU AT THE CLUB</p><h2 id="contacts-heading">Your next chapter<br>starts here.</h2><p>Ask a question, find your plan, or arrange a first visit. We'd love to hear from you.</p><dl class="contact-details"><div><dt>FIND US</dt><dd data-setting="address">Club address to be announced</dd><dd><a id="map-link" href="#contacts" hidden target="_blank" rel="noopener noreferrer">Open map ↗</a></dd></div><div><dt>SAY HELLO</dt><dd><a id="phone-link" hidden></a><span id="phone-pending">Phone to be announced</span></dd><dd><a id="email-link" hidden></a><span id="email-pending">Email to be announced</span></dd></div><div><dt>MAKE TIME</dt><dd>Monday – Friday <span data-setting="weekday_hours">07:00 – 23:00</span></dd><dd>Saturday – Sunday <span data-setting="weekend_hours">08:00 – 22:00</span></dd></div></dl><div class="location-card"><span aria-hidden="true">↗</span><div><strong>Your place to move.</strong><p id="location-note">A map link will be available when the club address is confirmed.</p></div></div></div>
+                <form id="contact-form" class="contact-form stacked-form"><p class="eyebrow">LET'S TALK</p><h3>Drop us a line.</h3><label>Your name<input name="name" autocomplete="name" maxlength="100" placeholder="Alex" required></label><label>Email address<input name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@example.com" required></label><label>What's on your mind?<textarea name="message" rows="4" maxlength="4000" placeholder="I'd like to plan my first visit…" required></textarea></label><button type="submit" class="button">Send message <span aria-hidden="true">↗</span></button><p class="small-note">Your details are used to respond to this enquiry.</p><p id="contact-status" class="form-status" role="status" aria-live="polite"></p></form>
+            </section>
         </section>
 
         <!-- Exercise zones -->
-        <section id="sport-zones" class="zones-section" style="min-height: 80vh;">
+        <section id="sport-zones" class="zones-section page-section section-shell">
+            <p class="eyebrow">SPACE TO MOVE</p>
             <h2>Exercise Zones</h2>
             <p>Free weights, cardio, CrossFit, and recovery areas.</p>
         </section>
 
         <!-- Coaches -->
-        <section id="coaches" class="coaches-section" style="min-height: 80vh;">
+        <section id="coaches" class="coaches-section page-section section-shell">
+            <p class="eyebrow">PEOPLE IN YOUR CORNER</p>
             <h2>Our Coaches</h2>
             <p>Certified trainers ready to assist your progress.</p>
         </section>
 
         <!-- Pricing -->
-        <section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
+        <section id="pricing" class="pricing-section page-section section-shell" aria-labelledby="pricing-heading">
             <header class="pricing-section__header">
+                <p class="eyebrow">YOUR ROUTINE STARTS HERE</p>
                 <h2 id="pricing-heading">Memberships & Pricing</h2>
                 <p class="pricing-section__lead">Choose the plan that best fits your training goals:</p>
             </header>
@@ -160,11 +227,18 @@
         </section>
 
         <!-- Schedule -->
+        <section id="working-hours" class="page-section section-shell">
+            <p class="eyebrow">MAKE TIME FOR YOU</p><h2>Class Schedule</h2><p>The class timetable is being developed by the team. Contact the club to plan a visit.</p><a href="#contacts" class="button">Talk to the team ↗</a>
+        </section>
 
         <!-- Group exercises -->
+        <section id="group-exercises" class="page-section section-shell">
+            <p class="eyebrow">FIND YOUR PEOPLE</p><h2>Group Exercises</h2><p>Yoga, stretching, swimming, functional training, aerobics, and Pilates. Online booking is being developed by the team.</p><a href="#contacts" class="button">Ask about a class ↗</a>
+        </section>
 
-        <!-- Contacts -->
+        <!-- Contacts are part of the homepage. -->
     </main>
-
+    <footer class="site-footer"><a href="#home" class="logo"><span class="logo-mark" aria-hidden="true">ƒ</span> FORM</a><span>A little stronger. Every day.</span><div><a href="#contacts">Get in touch ↗</a><a href="admin/login.php">Staff access</a></div><span class="footer-copy">© <span id="copyright-year">2026</span> FORM Fitness Club</span></footer>
+    <noscript><p class="noscript-note">All sections are shown below. Enable JavaScript to use online enquiries and see the latest club updates.</p></noscript>
 </body>
 </html>

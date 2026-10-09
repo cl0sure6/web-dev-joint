@@ -1,0 +1,13 @@
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(backend|scripts|var|tests|\.git)(/|$) - [F,L]
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule ^config.*\.php$ - [F,L]
+</IfModule>
+
+<FilesMatch "\.(sqlite.*|sql|md|log)$">
+    Require all denied
+</FilesMatch>
