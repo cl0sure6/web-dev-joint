@@ -499,11 +499,286 @@
             </ul>
         </section>
 
-        <!-- Schedule -->
-        <section id="working-hours" class="page-section section-shell">
-            <p class="eyebrow">MAKE TIME FOR YOU</p><h2>Class Schedule</h2><p>The class timetable is being developed by the team. Contact the club to plan a visit.</p><a href="#contacts" class="button">Talk to the team ↗</a>
-        </section>
+        <!-- ========================================
+            CLASS SCHEDULE PAGE
+        ======================================== -->
 
+        <section id="working-hours"
+                class="page-section section-shell schedule-section">
+
+            <!-- PAGE HEADER -->
+            <div class="schedule-header">
+
+                <div class="schedule-header-content">
+
+                    <p class="eyebrow">
+                        MAKE TIME FOR YOU
+                    </p>
+
+                    <h2>
+                        Class Schedule<span class="schedule-accent">.</span>
+                    </h2>
+
+                    <p class="schedule-description">
+                        Find the perfect time to move.
+                        Explore our weekly fitness schedule,
+                        discover your favorite classes,
+                        and plan your next workout.
+                    </p>
+
+                </div>
+
+                <div class="schedule-header-info">
+
+                    <span>07</span>
+
+                    <p>
+                        DAYS OF<br>
+                        MOVEMENT
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHEDULE CONTROLS -->
+            <div class="schedule-controls">
+
+                <div class="schedule-controls-top">
+
+                    <div>
+                        <p class="eyebrow">
+                            PLAN YOUR WEEK
+                        </p>
+
+                        <h3>Weekly Timetable</h3>
+                    </div>
+
+                    <div class="schedule-class-select">
+
+                        <label for="schedule-class-filter">
+                            FILTER BY CLASS
+                        </label>
+
+                        <select id="schedule-class-filter">
+
+                            <option value="all">
+                                All Classes
+                            </option>
+
+                            <option value="yoga">
+                                Yoga
+                            </option>
+
+                            <option value="pilates">
+                                Pilates
+                            </option>
+
+                            <option value="swimming">
+                                Swimming
+                            </option>
+
+                            <option value="stretching">
+                                Stretching
+                            </option>
+
+                            <option value="functional">
+                                Functional Training
+                            </option>
+
+                            <option value="aerobics">
+                                Aerobics
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WEEKDAY SELECTOR -->
+                <div class="schedule-weekdays">
+
+                    <button
+                        type="button"
+                        class="schedule-day active"
+                        data-day="monday">
+
+                        <span>MON</span>
+                        <strong>Monday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="tuesday">
+
+                        <span>TUE</span>
+                        <strong>Tuesday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="wednesday">
+
+                        <span>WED</span>
+                        <strong>Wednesday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="thursday">
+
+                        <span>THU</span>
+                        <strong>Thursday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="friday">
+
+                        <span>FRI</span>
+                        <strong>Friday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="saturday">
+
+                        <span>SAT</span>
+                        <strong>Saturday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="sunday">
+
+                        <span>SUN</span>
+                        <strong>Sunday</strong>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHEDULE RESULTS -->
+            <div class="schedule-results-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR TRAINING PLAN
+                    </p>
+
+                    <h3 id="schedule-selected-day">
+                        Monday
+                    </h3>
+
+                </div>
+
+                <p class="schedule-results-count">
+
+                    <span id="schedule-results-count">0</span>
+                    classes available
+
+                </p>
+
+            </div>
+
+
+            <!-- TABLE HEADER -->
+            <div class="schedule-table-heading">
+
+                <span>TIME</span>
+
+                <span>CLASS</span>
+
+                <span>COACH</span>
+
+                <span>AVAILABLE</span>
+
+                <span>ACTION</span>
+
+            </div>
+
+
+            <!-- CLASSES WILL BE GENERATED HERE -->
+            <div id="schedule-list"
+                class="schedule-list">
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+            <div id="schedule-empty"
+                class="schedule-empty"
+                hidden>
+
+                <h3>No classes found</h3>
+
+                <p>
+                    There are no classes matching
+                    your selection.
+                    Try another day or class.
+                </p>
+
+                <button
+                    type="button"
+                    id="schedule-reset"
+                    class="button">
+
+                    Show All Classes ↗
+
+                </button>
+
+            </div>
+
+
+            <!-- SCHEDULE BOTTOM -->
+            <div class="schedule-bottom">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR NEXT WORKOUT STARTS HERE
+                    </p>
+
+                    <h2>
+                        Make movement a habit.
+                    </h2>
+
+                    <p>
+                        Not sure which class fits your goals?
+                        Our coaches are here to guide you.
+                    </p>
+
+                </div>
+
+                <a href="#coaches"
+                class="button">
+
+                    Meet Our Coaches ↗
+
+                </a>
+
+            </div>
+
+        </section>
         <!-- ========================================
             GROUP EXERCISES PAGE
         ======================================== -->
