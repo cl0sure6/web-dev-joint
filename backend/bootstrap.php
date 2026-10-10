@@ -75,7 +75,7 @@ function seed_content(PDO $connection): void
     }
     $questions = [
         ['How do I buy a membership?', 'Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.'],
-        ['Can I cancel a class?', 'Cancellation options will be available in your member account once online booking opens. Until then, contact the club to change your plans.'],
+        ['Can I cancel a class?', 'Yes. Open My bookings in your member account and cancel before the class starts. Your spot will become available to another member.'],
         ['Is there a student discount?', 'Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.'],
         ['Can I use the pool?', 'Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.'],
         ['What should I bring to my first session?', 'Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.'],
@@ -116,9 +116,15 @@ function current_user(): ?array
     if (empty($_SESSION['user_id'])) {
         return null;
     }
-    $query = database()->prepare('SELECT id, name, email, role FROM users WHERE id = ?');
+    $query = database()->prepare('SELECT id, name, email, role, password_hash FROM users WHERE id = ?');
     $query->execute([$_SESSION['user_id']]);
-    return $query->fetch() ?: null;
+    $user = $query->fetch();
+    if (!$user || (isset($_SESSION['password_stamp']) && !hash_equals($_SESSION['password_stamp'], hash('sha256', $user['password_hash'])))) {
+        unset($_SESSION['user_id'], $_SESSION['password_stamp']);
+        return null;
+    }
+    unset($user['password_hash']);
+    return $user;
 }
 
 function is_admin(): bool

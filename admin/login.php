@@ -28,6 +28,7 @@ try {
             if ($verified && $user && $user['role'] === 'admin') {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['id'];
+                unset($_SESSION['password_stamp']);
                 $_SESSION['csrf'] = bin2hex(random_bytes(32));
                 if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
                     database()->prepare('UPDATE users SET password_hash = ? WHERE id = ?')->execute([password_hash($password, PASSWORD_DEFAULT), $user['id']]);

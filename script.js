@@ -156,6 +156,11 @@ async function loadClub() {
     try {
         const session = await request('session');
         csrfToken = session.csrf;
+        const accountLink = document.getElementById('member-account-link');
+        if (session.user) {
+            accountLink.textContent = session.user.role === 'admin' ? 'Administration ↗' : 'My account ↗';
+            accountLink.href = session.user.role === 'admin' ? 'admin/index.php' : 'account/index.php';
+        }
         if (session.user?.role === 'user') {
             document.getElementById('review-fields').disabled = false;
             document.getElementById('review-access').textContent = `Signed in as ${session.user.name}. Reviews are checked by the team before publication.`;

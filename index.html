@@ -27,7 +27,7 @@
             <li><a href="#group-exercises">Group exercises</a></li>
             <li><a href="#contacts">Contacts</a></li>
         </ul>
-        <a class="nav-join" href="#pricing">Find your plan ↗</a>
+        <a class="nav-join" id="member-account-link" href="account/login.php">Sign in ↗</a>
     </nav>
 
     <main id="main-content">
@@ -72,7 +72,7 @@
                 <div class="section-heading"><div><p class="eyebrow">03 / FROM OUR PEOPLE</p><h2 id="reviews-heading">Every routine has a story.</h2></div><a href="#review-form" class="text-link">Share yours ↗</a></div>
                 <div id="reviews-grid" class="reviews-grid"><div class="review-empty"><span class="quote-mark" aria-hidden="true">“</span><p>Your first session.<br>Your new personal best.<br>Your reason to come back.</p><span class="small-note">Member stories will appear here.</span></div></div>
                 <form id="review-form" class="review-form stacked-form" hidden>
-                    <h3>Tell us about your experience.</h3><p id="review-access" class="small-note">Sign in to your member account to leave a review. Member sign-in is being developed as a separate part of the project.</p>
+                    <h3>Tell us about your experience.</h3><p id="review-access" class="small-note"><a href="account/login.php">Sign in to your member account</a> to leave a review.</p>
                     <fieldset id="review-fields" disabled><legend class="sr-only">Your review</legend><label>Rating<select name="rating" required><option value="5">5 — Excellent</option><option value="4">4 — Good</option><option value="3">3 — Okay</option><option value="2">2 — Could be better</option><option value="1">1 — Poor</option></select></label><label>Your story<textarea name="comment" maxlength="2000" rows="3" required></textarea></label><button type="submit" class="button">Submit review ↗</button></fieldset><p id="review-status" class="form-status" role="status" aria-live="polite"></p>
                 </form>
             </section>
@@ -82,7 +82,7 @@
                 <div><p class="eyebrow">04 / BEFORE YOU START</p><h2 id="faq-heading">A few good<br>questions.</h2><p>Still wondering about something?<br><a href="#contacts" class="text-link">We're here to help ↗</a></p></div>
                 <div id="faq-list" class="faq-list">
                     <details><summary>How do I buy a membership?</summary><p>Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.</p></details>
-                    <details><summary>Can I cancel a class?</summary><p>Cancellation options will be available in your member account once online booking opens. Until then, contact the club to change your plans.</p></details>
+                    <details><summary>Can I cancel a class?</summary><p>Yes. Open My bookings in your member account and cancel before the class starts. Your spot will become available to another member.</p></details>
                     <details><summary>Is there a student discount?</summary><p>Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.</p></details>
                     <details><summary>Can I use the pool?</summary><p>Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.</p></details>
                     <details><summary>What should I bring to my first session?</summary><p>Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.</p></details>
@@ -228,12 +228,12 @@
 
         <!-- Schedule -->
         <section id="working-hours" class="page-section section-shell">
-            <p class="eyebrow">MAKE TIME FOR YOU</p><h2>Class Schedule</h2><p>The class timetable is being developed by the team. Contact the club to plan a visit.</p><a href="#contacts" class="button">Talk to the team ↗</a>
+            <p class="eyebrow">MAKE TIME FOR YOU</p><h2>Class Schedule</h2><p>Find a session that fits your day. Sign in to view available classes and book up to 28 days ahead.</p><a href="account/index.php#schedule" class="button">Explore the schedule ↗</a>
         </section>
 
         <!-- Group exercises -->
         <section id="group-exercises" class="page-section section-shell">
-            <p class="eyebrow">FIND YOUR PEOPLE</p><h2>Group Exercises</h2><p>Yoga, stretching, swimming, functional training, aerobics, and Pilates. Online booking is being developed by the team.</p><a href="#contacts" class="button">Ask about a class ↗</a>
+            <p class="eyebrow">FIND YOUR PEOPLE</p><h2>Group Exercises</h2><p>Make time for movement. Sign in to browse the current class schedule and book your next session.</p><a href="account/index.php#schedule" class="button">Find a class ↗</a>
         </section>
 
         <!-- Contacts are part of the homepage. -->

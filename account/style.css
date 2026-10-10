@@ -1,0 +1,73 @@
+/* Member pages use the shared FORM palette and typography. */
+.member-header { display: flex; align-items: center; gap: 28px; padding: 26px max(24px, calc((100vw - 1280px) / 2)); border-bottom: 1px solid var(--line); }
+.member-header .logo { margin-right: auto; }
+.back-to-club, .member-signout { font-size: 12px; color: var(--ink); text-decoration: none; }
+.member-signout { background: none; border: 1px solid var(--line); padding: 10px 16px; }
+.member-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1280px; margin: auto; min-height: 75vh; }
+.member-sidebar { padding: 42px 24px 30px 0; border-right: 1px solid var(--line); }
+.member-sidebar > .eyebrow { padding-left: 16px; margin-bottom: 20px; }
+.member-sidebar nav { display: grid; gap: 7px; }
+.member-sidebar nav a { display: flex; gap: 17px; padding: 14px 16px; text-decoration: none; font-size: 13px; }
+.member-sidebar nav a span { color: var(--muted); font-size: 11px; }
+.member-sidebar nav a:hover { background: #e9ebdf; }
+.member-sidebar nav a[aria-current] { background: var(--green); font-weight: bold; }
+.member-review { display: block; font-size: 12px; padding: 30px 16px; }
+.sidebar-note { font-family: Georgia, serif; font-style: italic; color: var(--muted); padding: 30px 16px; border-top: 1px solid var(--line); }
+.member-main { padding: 46px 48px 60px; min-width: 0; }
+.member-main h1 { font-size: clamp(40px, 4.2vw, 64px); line-height: 1.05; letter-spacing: -.055em; overflow-wrap: anywhere; }
+.member-main h1 em, .auth-story h1 em { color: var(--accent); font-family: Georgia, serif; font-weight: normal; }
+.member-main section > .eyebrow { margin-bottom: 20px; }
+.member-lead { margin-top: 20px; font-size: 14px; color: var(--muted); }
+.member-cards { display: grid; grid-template-columns: 1.15fr 1fr; gap: 22px; margin: 36px 0; }
+.member-card { padding: 28px; background: var(--white); border: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.member-card .eyebrow { margin-bottom: 22px; }
+.member-card h2 { font-size: 28px; margin-bottom: 18px; }
+.member-card p { font-size: 13px; margin-bottom: 16px; }
+.member-card .button { margin-top: 12px; }
+.membership-card { background: var(--green); }
+.member-badge { display: inline-block; padding: 5px 9px; border: 1px solid #aab29b; font-size: 11px; margin: 4px 0 18px; }
+.member-callout { border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 26px 0; }
+.member-callout h2 { font-size: 25px; }
+.member-callout p { color: var(--muted); font-size: 13px; margin-top: 10px; }
+.member-callout .button { flex-shrink: 0; }
+.member-row { display: flex; align-items: center; gap: 24px; justify-content: space-between; padding: 24px 0; border-top: 1px solid var(--line); }
+.member-row > div { min-width: 0; overflow-wrap: anywhere; }
+.member-row h3 { font-size: 23px; margin-bottom: 8px; }
+.member-row p { font-size: 13px; color: var(--muted); }
+.member-row .button { flex-shrink: 0; }
+.class-time { display: block; font-family: Georgia, serif; font-size: 28px; margin-bottom: 10px; }
+.member-empty { padding: 28px 0; color: var(--muted); font-size: 14px; }
+.schedule-toolbar { display: flex; gap: 20px; align-items: end; flex-wrap: wrap; margin: 30px 0; }
+.schedule-toolbar label { font-size: 12px; }
+.schedule-toolbar input { margin-top: 7px; max-width: 230px; }
+.field-hint { color: var(--muted); font-size: 12px; }
+.list-heading { font-size: 23px; margin: 30px 0 20px; }
+.history-heading { margin-top: 45px; }
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 32px; }
+.profile-grid h2 { font-size: 26px; margin-bottom: 26px; }
+.profile-grid .button { width: 100%; }
+.member-footer { padding: 24px; border-top: 1px solid var(--line); text-align: center; font-size: 11px; color: var(--muted); }
+.member-main > .form-status { margin: 0 0 24px; }
+.member-main > .form-status:empty { display: none; }
+.member-dialog { margin: auto; padding: 32px; width: min(480px, calc(100% - 32px)); border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+.member-dialog::backdrop { background: rgba(25, 30, 22, .55); }
+.member-dialog h2 { font-size: 30px; margin-bottom: 18px; }
+.member-dialog p { font-size: 14px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+.auth-layout { display: grid; grid-template-columns: 1.1fr .9fr; min-height: 100vh; }
+.auth-back { position: absolute; top: 24px; left: 4%; font-size: 12px; text-decoration: none; }
+.auth-story { background: var(--green); padding: 100px 12% 60px; }
+.auth-story .logo { margin-bottom: 80px; }
+.auth-story h1 { font-size: clamp(48px, 5.5vw, 80px); letter-spacing: -.05em; margin: 25px 0; }
+.auth-story > p:not(.eyebrow) { max-width: 330px; font-size: 14px; color: var(--muted); }
+.auth-stamp { display: block; border-top: 1px solid #b5bfa5; padding-top: 20px; margin-top: 60px; font-size: 11px; letter-spacing: .1em; }
+.auth-card { max-width: 490px; width: 100%; align-self: center; padding: 50px; margin: auto; }
+.auth-card h2 { font-size: 38px; margin: 18px 0; }
+.auth-card > p { font-size: 13px; color: var(--muted); }
+.auth-card form { margin-top: 28px; }
+.auth-card .button { width: 100%; margin-top: 18px; }
+.auth-switch { margin: 26px 0 16px; }
+.auth-card .field-hint { margin: -8px 0 20px; }
+.button:disabled { cursor: not-allowed; opacity: .6; }
+@media(max-width:1100px) { .member-layout { grid-template-columns: 185px minmax(0,1fr); } .member-main { padding: 35px 28px; } .member-sidebar { padding-left: 12px; padding-right: 12px; } .member-cards,.profile-grid { gap: 16px; } .member-card { padding: 22px; } }
+@media(max-width:760px) { .member-layout { grid-template-columns: 1fr; } .member-sidebar { border-right: 0; border-bottom: 1px solid var(--line); padding: 12px; } .member-sidebar nav { display: flex; flex-wrap: wrap; gap: 4px; } .member-sidebar nav a { padding: 12px; gap: 7px; } .member-sidebar > .eyebrow,.sidebar-note,.member-review { display: none; } .member-cards,.profile-grid { grid-template-columns: 1fr; } .member-main { padding: 30px 22px; } .member-header { padding: 22px; gap: 16px; flex-wrap: wrap; } .member-header .logo { font-size: 24px; } .member-callout,.member-row { align-items: flex-start; flex-direction: column; } .auth-layout { grid-template-columns: 1fr; } .auth-story { padding: 85px 28px 35px; } .auth-story .logo { margin-bottom: 35px; } .auth-story h1 { font-size: 48px; } .auth-stamp { display: none; } .auth-card { padding: 35px 28px; } input { font-size: 16px; } }

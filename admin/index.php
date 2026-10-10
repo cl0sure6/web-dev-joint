@@ -42,6 +42,7 @@ $user = current_user();
             <a href="#messages"><span>11</span> Inbox</a>
             <a href="#settings"><span>12</span> Club information</a>
         </nav>
+        <a class="task-row" href="member-plans.php">Assign member memberships ↗</a>
         <div class="sidebar-footer">
             <span class="staff-avatar" aria-hidden="true"><?= escape(substr($user['name'], 0, 1)) ?></span>
             <div><strong><?= escape($user['name']) ?></strong><span>Administrator</span></div>

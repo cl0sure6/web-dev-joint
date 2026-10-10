@@ -175,8 +175,8 @@ function render() {
         return;
     }
     const labels = {
-        users: ['Members & staff', 'Registered accounts. Member registration is managed by the member-account part of the project.'],
-        bookings: ['Bookings', 'All class reservations, including cancellations. Online booking is managed by the booking part of the project.'],
+        users: ['Members & staff', 'Accounts registered through the member sign-in page. Use Assign member memberships to manage their plans.'],
+        bookings: ['Bookings', 'All class reservations, including cancellations, made through member accounts.'],
         reviews: ['Member stories', 'Approve reviews before they appear on the homepage.'],
         messages: ['The club inbox.', 'Enquiries from the homepage. Reply using the email address provided.'],
         settings: ['Club information', 'Keep the homepage details and contact information up to date.'],

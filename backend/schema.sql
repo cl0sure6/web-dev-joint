@@ -96,3 +96,15 @@ CREATE TABLE IF NOT EXISTS rate_limits (
     started_at INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_memberships (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+    membership_id INTEGER NOT NULL REFERENCES memberships(id) ON DELETE RESTRICT,
+    starts_on TEXT NOT NULL,
+    ends_on TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'cancelled')),
+    CHECK (ends_on >= starts_on)
+);
+CREATE INDEX IF NOT EXISTS booking_availability ON bookings(schedule_id, date, status);
+CREATE INDEX IF NOT EXISTS member_plans ON user_memberships(user_id, ends_on);
+

@@ -70,6 +70,7 @@ try {
     if ($method === 'GET' && $action === 'session') {
         respond(['user' => current_user(), 'csrf' => $_SESSION['csrf']]);
     }
+    require __DIR__ . '/backend/member-api.php';
     if ($method === 'GET' && $action === 'content') {
         $settings = [];
         foreach ($connection->query("SELECT key, value FROM settings WHERE key != 'initialized'") as $setting) {
@@ -77,10 +78,18 @@ try {
         }
         $query = $connection->prepare('SELECT * FROM news WHERE published_on <= ? ORDER BY published_on DESC, id DESC');
         $query->execute([date('Y-m-d')]);
+        $faqs = $connection->query('SELECT * FROM faqs ORDER BY position, id')->fetchAll();
+        // Refresh the old default copy without overwriting administrator-written answers.
+        foreach ($faqs as &$faq) {
+            if ($faq['question'] === 'Can I cancel a class?' && $faq['answer'] === 'Cancellation options will be available in your member account once online booking opens. Until then, contact the club to change your plans.') {
+                $faq['answer'] = 'Yes. Open My bookings in your member account and cancel before the class starts. Your spot will become available to another member.';
+            }
+        }
+        unset($faq);
         respond([
             'settings' => $settings,
             'memberships' => $connection->query('SELECT * FROM memberships ORDER BY id')->fetchAll(),
-            'faqs' => $connection->query('SELECT * FROM faqs ORDER BY position, id')->fetchAll(),
+            'faqs' => $faqs,
             'news' => $query->fetchAll(),
             'reviews' => $connection->query('SELECT reviews.id, users.name, reviews.rating, reviews.comment, reviews.created_at FROM reviews JOIN users ON users.id = reviews.user_id WHERE published = 1 ORDER BY reviews.id DESC LIMIT 12')->fetchAll(),
         ]);
@@ -115,6 +124,7 @@ try {
     if (!csrf_valid($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
         respond(['error' => 'Your form expired. Refresh the page and try again.'], 403);
     }
+    member_action($action, $input, $connection);
     if ($action === 'contact') {
         $name = text_field($input, 'name', 100);
         $email = text_field($input, 'email', 200);
