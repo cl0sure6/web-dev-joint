@@ -85,6 +85,28 @@ try {
             'reviews' => $connection->query('SELECT reviews.id, users.name, reviews.rating, reviews.comment, reviews.created_at FROM reviews JOIN users ON users.id = reviews.user_id WHERE published = 1 ORDER BY reviews.id DESC LIMIT 12')->fetchAll(),
         ]);
     }
+    if ($method === 'GET' && $action === 'public-schedule') {
+        $date = date_field($_GET, 'date');
+        $requested = new DateTimeImmutable($date);
+        $today = new DateTimeImmutable('today');
+        if ($requested < $today || $requested > $today->modify('+30 days')) {
+            respond(['error' => 'Choose a date within the next 30 days.'], 422);
+        }
+        $query = $connection->prepare("SELECT s.id, s.start_time, s.room, c.name AS class_name,
+               c.capacity, c.duration, COALESCE(t.name, 'To be announced') AS coach,
+               c.id AS class_id,
+               (SELECT COUNT(*) FROM bookings b WHERE b.schedule_id=s.id AND b.date=? AND b.status='confirmed') +
+               (SELECT COUNT(*) FROM guest_bookings g WHERE g.schedule_id=s.id AND g.date=? AND g.status='confirmed') AS reserved
+               FROM schedule s JOIN classes c ON c.id=s.class_id
+               LEFT JOIN trainers t ON t.id=c.trainer_id WHERE s.weekday=? ORDER BY s.start_time, s.id");
+        $query->execute([$date,$date,(int)$requested->format('N')]);
+        $rows = $query->fetchAll();
+        foreach ($rows as &$row) {
+            $row['available'] = max(0, (int)$row['capacity'] - (int)$row['reserved']);
+        }
+        unset($row);
+        respond(['date'=>$date,'sessions'=>$rows]);
+    }
     if ($method === 'GET' && $action === 'admin-data') {
         if (!is_admin()) {
             respond(['error' => 'Please sign in as an administrator.'], 401);
@@ -96,6 +118,8 @@ try {
         $data['users'] = $connection->query('SELECT id, name, email, role, created_at FROM users ORDER BY id DESC')->fetchAll();
         $data['reviews'] = $connection->query('SELECT reviews.*, users.name FROM reviews JOIN users ON users.id = reviews.user_id ORDER BY reviews.id DESC')->fetchAll();
         $data['bookings'] = $connection->query('SELECT bookings.*, users.name AS member, classes.name AS class_name, schedule.start_time FROM bookings JOIN users ON users.id = bookings.user_id JOIN schedule ON schedule.id = bookings.schedule_id JOIN classes ON classes.id = schedule.class_id ORDER BY bookings.date DESC, schedule.start_time')->fetchAll();
+        $guest = $connection->query("SELECT g.id, g.date, g.status, g.name AS member, g.email, g.phone, c.name AS class_name, s.start_time FROM guest_bookings g JOIN schedule s ON s.id=g.schedule_id JOIN classes c ON c.id=s.class_id ORDER BY g.date DESC, s.start_time")->fetchAll();
+        $data['bookings'] = array_merge($data['bookings'], $guest);
         $data['settings'] = [];
         foreach ($connection->query("SELECT key, value FROM settings WHERE key != 'initialized'") as $setting) {
             $data['settings'][$setting['key']] = $setting['value'];
@@ -114,6 +138,51 @@ try {
     }
     if (!csrf_valid($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
         respond(['error' => 'Your form expired. Refresh the page and try again.'], 403);
+    }
+    if ($action === 'guest-book') {
+        $name = text_field($input, 'name', 100);
+        $email = strtolower(text_field($input, 'email', 200));
+        $phone = text_field($input, 'phone', 30);
+        $date = date_field($input, 'date');
+        $scheduleId = number_field($input, 'schedule_id', 1, PHP_INT_MAX);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^\+?[0-9 ()-]{6,30}$/', $phone)) {
+            respond(['error'=>'Enter a valid email and phone number.'],422);
+        }
+        $sessionDate = new DateTimeImmutable($date);
+        $now = new DateTimeImmutable('now');
+        $today = new DateTimeImmutable('today');
+        if ($sessionDate < $today || $sessionDate > $today->modify('+30 days')) {
+            respond(['error'=>'Choose a date in the next 30 days.'],422);
+        }
+        if (!throttle('guest-book', 12, 600)) respond(['error'=>'Too many attempts. Try again later.'],429);
+        $connection->exec('BEGIN IMMEDIATE');
+        try {
+            $q=$connection->prepare('SELECT s.weekday, s.start_time, c.capacity FROM schedule s JOIN classes c ON c.id=s.class_id WHERE s.id=?');
+            $q->execute([$scheduleId]);
+            $session=$q->fetch();
+            if (!$session || (int)$session['weekday'] !== (int)$sessionDate->format('N')) {
+                $connection->rollBack(); respond(['error'=>'This class is not scheduled on the selected date.'],422);
+            }
+            if (new DateTimeImmutable($date.' '.$session['start_time']) <= $now) {
+                $connection->rollBack(); respond(['error'=>'Choose a future class.'],422);
+            }
+            $q=$connection->prepare("SELECT
+              (SELECT COUNT(*) FROM bookings WHERE schedule_id=? AND date=? AND status='confirmed') +
+              (SELECT COUNT(*) FROM guest_bookings WHERE schedule_id=? AND date=? AND status='confirmed')");
+            $q->execute([$scheduleId,$date,$scheduleId,$date]);
+            if ((int)$q->fetchColumn() >= (int)$session['capacity']) {
+                $connection->rollBack(); respond(['error'=>'Sorry, this class is fully booked.'],409);
+            }
+            $q=$connection->prepare('INSERT INTO guest_bookings(schedule_id,date,name,email,phone) VALUES(?,?,?,?,?)');
+            $q->execute([$scheduleId,$date,$name,$email,$phone]);
+            $bookingId=(int)$connection->lastInsertId();
+            $connection->commit();
+            respond(['message'=>'Booking confirmed!','booking_id'=>$bookingId]);
+        } catch (PDOException $e) {
+            if ($connection->inTransaction()) $connection->rollBack();
+            if (str_contains($e->getMessage(),'UNIQUE constraint failed')) respond(['error'=>'This email is already booked for the selected class and date.'],409);
+            throw $e;
+        }
     }
     if ($action === 'contact') {
         $name = text_field($input, 'name', 100);

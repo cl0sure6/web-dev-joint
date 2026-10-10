@@ -361,547 +361,150 @@ groupScheduleButtons.forEach(button => {
 
 });
 
-// ========================================
-// CLASS SCHEDULE FUNCTIONALITY
-// ========================================
-
 
 // ========================================
-// 1. CLASS INFORMATION
+// CLASS SCHEDULE & ONLINE BOOKING (SQLite-backed)
 // ========================================
+const scheduleDays = [...document.querySelectorAll('.schedule-day')];
+const scheduleFilter = document.getElementById('schedule-class-filter');
+const scheduleList = document.getElementById('schedule-list');
+const scheduleEmpty = document.getElementById('schedule-empty');
+const dateInput = document.getElementById('booking-date');
+const bookingForm = document.getElementById('booking-form');
+const weekdayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+let selectedDay = 'monday';
+let selectedClass = 'all';
+let displayedSessions = [];
+let bookingSelection = null;
 
-const fitnessClasses = {
-
-    yoga: {
-        name: "Yoga",
-        coach: "Sophia Williams",
-        duration: 60,
-        capacity: 15,
-        level: "Beginner"
-    },
-
-    pilates: {
-        name: "Pilates",
-        coach: "Olivia Brown",
-        duration: 50,
-        capacity: 12,
-        level: "Beginner"
-    },
-
-    swimming: {
-        name: "Swimming",
-        coach: "Emma Thompson",
-        duration: 45,
-        capacity: 10,
-        level: "Intermediate"
-    },
-
-    stretching: {
-        name: "Stretching",
-        coach: "Olivia Brown",
-        duration: 45,
-        capacity: 15,
-        level: "Beginner"
-    },
-
-    functional: {
-        name: "Functional Training",
-        coach: "Alex Morgan",
-        duration: 60,
-        capacity: 12,
-        level: "Advanced"
-    },
-
-    aerobics: {
-        name: "Aerobics",
-        coach: "Sophia Williams",
-        duration: 50,
-        capacity: 20,
-        level: "Intermediate"
-    }
-
-};
-
-
-// ========================================
-// 2. WEEKLY SCHEDULE DATA
-// ========================================
-
-// Available spots are demo values.
-// Real availability will come from SQLite later.
-
-const weeklySchedule = {
-
-    monday: [
-        { id: 1, class: "yoga", time: "08:00", available: 8 },
-        { id: 2, class: "pilates", time: "10:00", available: 6 },
-        { id: 3, class: "swimming", time: "12:00", available: 4 },
-        { id: 4, class: "functional", time: "17:00", available: 9 },
-        { id: 5, class: "aerobics", time: "19:00", available: 12 }
-    ],
-
-    tuesday: [
-        { id: 6, class: "stretching", time: "08:00", available: 10 },
-        { id: 7, class: "swimming", time: "10:00", available: 5 },
-        { id: 8, class: "yoga", time: "12:00", available: 7 },
-        { id: 9, class: "pilates", time: "17:00", available: 8 },
-        { id: 10, class: "functional", time: "19:00", available: 6 }
-    ],
-
-    wednesday: [
-        { id: 11, class: "yoga", time: "08:00", available: 9 },
-        { id: 12, class: "aerobics", time: "10:00", available: 13 },
-        { id: 13, class: "pilates", time: "12:00", available: 5 },
-        { id: 14, class: "swimming", time: "17:00", available: 3 },
-        { id: 15, class: "stretching", time: "19:00", available: 11 }
-    ],
-
-    thursday: [
-        { id: 16, class: "functional", time: "08:00", available: 7 },
-        { id: 17, class: "yoga", time: "10:00", available: 10 },
-        { id: 18, class: "swimming", time: "12:00", available: 6 },
-        { id: 19, class: "aerobics", time: "17:00", available: 15 },
-        { id: 20, class: "pilates", time: "19:00", available: 4 }
-    ],
-
-    friday: [
-        { id: 21, class: "stretching", time: "08:00", available: 12 },
-        { id: 22, class: "pilates", time: "10:00", available: 7 },
-        { id: 23, class: "functional", time: "12:00", available: 8 },
-        { id: 24, class: "yoga", time: "17:00", available: 6 },
-        { id: 25, class: "aerobics", time: "19:00", available: 10 }
-    ],
-
-    saturday: [
-        { id: 26, class: "yoga", time: "09:00", available: 11 },
-        { id: 27, class: "swimming", time: "11:00", available: 4 },
-        { id: 28, class: "functional", time: "13:00", available: 5 },
-        { id: 29, class: "aerobics", time: "16:00", available: 14 }
-    ],
-
-    sunday: [
-        { id: 30, class: "stretching", time: "09:00", available: 13 },
-        { id: 31, class: "yoga", time: "11:00", available: 9 },
-        { id: 32, class: "pilates", time: "13:00", available: 8 }
-    ]
-
-};
-
-
-// ========================================
-// 3. ELEMENTS
-// ========================================
-
-const scheduleDayButtons =
-    document.querySelectorAll(".schedule-day");
-
-const scheduleClassFilter =
-    document.getElementById("schedule-class-filter");
-
-const scheduleList =
-    document.getElementById("schedule-list");
-
-const scheduleSelectedDay =
-    document.getElementById("schedule-selected-day");
-
-const scheduleResultsCount =
-    document.getElementById("schedule-results-count");
-
-const scheduleEmpty =
-    document.getElementById("schedule-empty");
-
-const scheduleReset =
-    document.getElementById("schedule-reset");
-
-
-// ========================================
-// 4. CURRENT STATE
-// ========================================
-
-let selectedScheduleDay = "monday";
-
-let selectedScheduleClass = "all";
-
-
-// ========================================
-// 5. TIME CALCULATION
-// ========================================
-
-function calculateEndTime(startTime, duration) {
-
-    const [hours, minutes] =
-        startTime.split(":").map(Number);
-
-    const totalMinutes =
-        hours * 60 + minutes + duration;
-
-    const endHours =
-        Math.floor(totalMinutes / 60) % 24;
-
-    const endMinutes =
-        totalMinutes % 60;
-
-    return (
-        String(endHours).padStart(2, "0") +
-        ":" +
-        String(endMinutes).padStart(2, "0")
-    );
-
+function localISO(date) {
+    return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
 }
-
-
-// ========================================
-// 6. RENDER SCHEDULE
-// ========================================
-
-function renderSchedule() {
-
-    const dayClasses =
-        weeklySchedule[selectedScheduleDay] || [];
-
-    const filteredClasses =
-        dayClasses.filter(item => {
-
-            return (
-                selectedScheduleClass === "all" ||
-                item.class === selectedScheduleClass
-            );
-
+function nextDateForDay(day) {
+    const numbers = {sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};
+    const date = new Date();
+    date.setHours(0,0,0,0);
+    date.setDate(date.getDate()+(numbers[day]-date.getDay()+7)%7);
+    return localISO(date);
+}
+async function fetchPublicSchedule(date) {
+    const response=await fetch(`api.php?action=public-schedule&date=${encodeURIComponent(date)}`,{credentials:'same-origin'});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.error||'Unable to load schedule.');
+    return result;
+}
+function endAt(start,minutes) {
+    const [h,m]=start.split(':').map(Number);
+    const total=h*60+m+Number(minutes);
+    return `${String(Math.floor(total/60)%24).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;
+}
+async function loadSchedule() {
+    const date = nextDateForDay(selectedDay);
+    document.getElementById('schedule-selected-day').textContent = `${selectedDay[0].toUpperCase()+selectedDay.slice(1)} · ${date}`;
+    scheduleList.textContent = 'Loading available sessions...';
+    try {
+        const result = await fetchPublicSchedule(date);
+        displayedSessions = result.sessions;
+        const rows=displayedSessions.filter(row=>selectedClass==='all'||row.class_name.toLowerCase().replaceAll(' ','-')===selectedClass || (selectedClass==='functional' && row.class_name.toLowerCase()==='functional training'));
+        document.getElementById('schedule-results-count').textContent = rows.length;
+        scheduleList.innerHTML='';
+        scheduleEmpty.hidden=rows.length>0;
+        rows.forEach(item=>{
+            const row=document.createElement('div');row.className='schedule-row';
+            const available=Number(item.available);
+            const percent=100*available/Number(item.capacity);
+            const past=new Date(`${date}T${item.start_time}:00`)<=new Date();
+            row.innerHTML=`<div class="schedule-time"><strong>${escapeHtml(item.start_time)}</strong><span>Until ${endAt(item.start_time,item.duration)}</span></div>
+              <div class="schedule-class-info"><h4>${escapeHtml(item.class_name)}</h4><span class="schedule-category">${escapeHtml(item.room)}</span></div>
+              <div class="schedule-coach">${escapeHtml(item.coach)}</div>
+              <div class="schedule-availability"><span class="schedule-spots">${available} / ${item.capacity} spots</span><div class="schedule-spots-bar"><div class="schedule-spots-fill" style="width:${percent}%"></div></div></div>
+              <button type="button" class="schedule-book-btn" data-id="${item.id}" ${available===0||past?'disabled':''}>${past?'Finished':available===0?'Class Full':'Book Now'} <span>↗</span></button>`;
+            scheduleList.append(row);
         });
-
-
-    // Clear previous results
-    scheduleList.innerHTML = "";
-
-
-    // Update selected day
-    scheduleSelectedDay.textContent =
-        selectedScheduleDay.charAt(0).toUpperCase() +
-        selectedScheduleDay.slice(1);
-
-
-    // Update class count
-    scheduleResultsCount.textContent =
-        filteredClasses.length;
-
-
-    // Show empty state
-    if (filteredClasses.length === 0) {
-
-        scheduleEmpty.hidden = false;
-
-        return;
-
+    } catch(err) { scheduleList.textContent=err.message; scheduleEmpty.hidden=true; }
+}
+function applyClassFromGroup() {
+    const stored=sessionStorage.getItem('selectedFitnessClass');
+    if(stored && [...scheduleFilter.options].some(o=>o.value===stored)) {
+        selectedClass=stored;scheduleFilter.value=stored;
     }
-
-    scheduleEmpty.hidden = true;
-
-
-    // Generate schedule rows
-    filteredClasses.forEach(item => {
-
-        const classInfo =
-            fitnessClasses[item.class];
-
-        if (!classInfo) return;
-
-
-        const endTime =
-            calculateEndTime(
-                item.time,
-                classInfo.duration
-            );
-
-
-        const availabilityPercentage =
-            (item.available / classInfo.capacity) * 100;
-
-
-        const isFull =
-            item.available <= 0;
-
-
-        const row = document.createElement("div");
-
-        row.className = "schedule-row";
-
-
-        row.innerHTML = `
-
-            <!-- TIME -->
-            <div class="schedule-time">
-
-                <strong>
-                    ${item.time}
-                </strong>
-
-                <span>
-                    Until ${endTime}
-                </span>
-
-            </div>
-
-
-            <!-- CLASS -->
-            <div class="schedule-class-info">
-
-                <h4>
-                    ${classInfo.name}
-                </h4>
-
-                <span class="schedule-category">
-                    ${classInfo.level}
-                </span>
-
-            </div>
-
-
-            <!-- COACH -->
-            <div class="schedule-coach">
-
-                ${classInfo.coach}
-
-            </div>
-
-
-            <!-- AVAILABLE SPOTS -->
-            <div class="schedule-availability">
-
-                <span class="schedule-spots ${isFull ? "schedule-full" : ""}">
-
-                    ${isFull
-                        ? "Fully Booked"
-                        : item.available + " / " + classInfo.capacity + " spots"
-                    }
-
-                </span>
-
-                <div class="schedule-spots-bar">
-
-                    <div
-                        class="schedule-spots-fill"
-                        style="width: ${availabilityPercentage}%">
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- BOOKING -->
-            <button
-                type="button"
-                class="schedule-book-btn"
-                data-schedule-id="${item.id}"
-                ${isFull ? "disabled" : ""}>
-
-                ${isFull ? "Class Full" : "Book Now"}
-
-                <span>↗</span>
-
-            </button>
-
-        `;
-
-
-        scheduleList.appendChild(row);
-
+    sessionStorage.removeItem('selectedFitnessClass');
+    loadSchedule();
+}
+scheduleDays.forEach(day=>{
+    day.setAttribute('aria-pressed',String(day.classList.contains('active')));
+    day.addEventListener('click',()=>{
+        selectedDay=day.dataset.day;
+        scheduleDays.forEach(b=>{b.classList.toggle('active',b===day);b.setAttribute('aria-pressed',String(b===day));});
+        loadSchedule();
     });
-
+});
+scheduleFilter.addEventListener('change',()=>{selectedClass=scheduleFilter.value;loadSchedule();});
+document.getElementById('schedule-reset').addEventListener('click',()=>{selectedClass='all';scheduleFilter.value='all';loadSchedule();});
+window.addEventListener('hashchange',()=>{
+    if(location.hash==='#working-hours') applyClassFromGroup();
+    if(location.hash==='#online-booking') loadBookingSelection();
+});
+scheduleList.addEventListener('click',event=>{
+    const btn=event.target.closest('.schedule-book-btn');
+    if(!btn||btn.disabled)return;
+    const row=displayedSessions.find(s=>Number(s.id)===Number(btn.dataset.id));
+    if(!row)return;
+    bookingSelection={...row,date:nextDateForDay(selectedDay)};
+    sessionStorage.setItem('bookingSelection',JSON.stringify(bookingSelection));
+    location.hash='#online-booking';
+    loadBookingSelection();
+});
+async function loadBookingSelection() {
+    const message=document.getElementById('booking-status');
+    message.textContent='';
+    try {bookingSelection=JSON.parse(sessionStorage.getItem('bookingSelection')||'null');}
+    catch {bookingSelection=null;}
+    const valid=bookingSelection&&bookingSelection.id&&bookingSelection.date;
+    document.getElementById('booking-submit').disabled=!valid;
+    if(!valid){message.textContent='Choose a class in Schedule first.';return;}
+    document.getElementById('booking-class').textContent=bookingSelection.class_name;
+    document.getElementById('booking-coach').textContent=bookingSelection.coach;
+    document.getElementById('booking-time').textContent=bookingSelection.start_time;
+    dateInput.value=bookingSelection.date;
+    dateInput.min=localISO(new Date());
+    const max=new Date(); max.setDate(max.getDate()+30); dateInput.max=localISO(max);
+    await checkBookingDate();
 }
-
-
-// ========================================
-// 7. WEEKDAY SWITCHING
-// ========================================
-
-scheduleDayButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        selectedScheduleDay =
-            button.dataset.day;
-
-
-        scheduleDayButtons.forEach(btn => {
-
-            btn.classList.remove("active");
-
-            btn.setAttribute(
-                "aria-pressed",
-                "false"
-            );
-
-        });
-
-
-        button.classList.add("active");
-
-        button.setAttribute(
-            "aria-pressed",
-            "true"
-        );
-
-
-        renderSchedule();
-
-    });
-
-});
-
-
-// ========================================
-// 8. CLASS FILTERING
-// ========================================
-
-scheduleClassFilter.addEventListener(
-    "change",
-    () => {
-
-        selectedScheduleClass =
-            scheduleClassFilter.value;
-
-        renderSchedule();
-
-    }
-);
-
-
-// ========================================
-// 9. RESET FILTERS
-// ========================================
-
-scheduleReset.addEventListener("click", () => {
-
-    selectedScheduleClass = "all";
-
-    scheduleClassFilter.value = "all";
-
-    renderSchedule();
-
-});
-
-
-// ========================================
-// 10. GROUP EXERCISES INTEGRATION
-// ========================================
-
-// Group Exercises saves selected class
-// in sessionStorage before navigation.
-
-function applySelectedFitnessClass() {
-
-    const savedClass =
-        sessionStorage.getItem("selectedFitnessClass");
-
-    if (!savedClass) return;
-
-
-    if (fitnessClasses[savedClass]) {
-
-        selectedScheduleClass = savedClass;
-
-        scheduleClassFilter.value = savedClass;
-
-        renderSchedule();
-
-    }
-
-
-    // Remove temporary selection after using it
-    sessionStorage.removeItem("selectedFitnessClass");
-
+async function checkBookingDate() {
+    if(!bookingSelection)return;
+    const date=dateInput.value;
+    document.getElementById('booking-date-label').textContent=date||'—';
+    const status=document.getElementById('booking-status');
+    const btn=document.getElementById('booking-submit');btn.disabled=true;
+    if(!date)return;
+    const chosen=new Date(date+'T12:00:00');
+    const original=new Date(bookingSelection.date+'T12:00:00');
+    if(chosen.getDay()!==original.getDay()) {status.textContent='Choose the same weekday as your selected session.';return;}
+    try {
+        const result=await fetchPublicSchedule(date);
+        const live=result.sessions.find(row=>Number(row.id)===Number(bookingSelection.id));
+        if(!live){status.textContent='Session no longer available.';return;}
+        bookingSelection={...live,date};
+        document.getElementById('booking-spots').textContent=`${live.available} / ${live.capacity}`;
+        const past=new Date(`${date}T${live.start_time}:00`)<=new Date();
+        status.textContent=past?'This class has already started.':live.available<1?'This class is full.':'';
+        btn.disabled=past||live.available<1;
+    } catch(error){status.textContent=error.message;}
 }
-
-
-// Apply the filter whenever Schedule is opened
-
-window.addEventListener("hashchange", () => {
-
-    if (window.location.hash === "#working-hours") {
-
-        applySelectedFitnessClass();
-
-    }
-
+dateInput.addEventListener('change',checkBookingDate);
+bookingForm.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const btn=document.getElementById('booking-submit');const status=document.getElementById('booking-status');
+    if(!bookingSelection||btn.disabled)return;
+    btn.disabled=true;status.textContent='Confirming your reservation...';
+    const values=Object.fromEntries(new FormData(bookingForm));
+    try {
+        const result=await request('guest-book',{schedule_id:Number(bookingSelection.id),...values});
+        status.textContent=`✓ ${result.message} Reference #${result.booking_id}.`;
+        bookingForm.reset();sessionStorage.removeItem('bookingSelection');bookingSelection=null;
+        await loadSchedule();
+    } catch(error){status.textContent=error.message;btn.disabled=false;}
 });
-
-
-// ========================================
-// 11. BOOK NOW
-// ========================================
-
-scheduleList.addEventListener("click", event => {
-
-    const button =
-        event.target.closest(".schedule-book-btn");
-
-    if (!button || button.disabled) return;
-
-
-    const scheduleId =
-        Number(button.dataset.scheduleId);
-
-
-    // Find selected training
-    const selectedTraining =
-        weeklySchedule[selectedScheduleDay].find(
-            item => item.id === scheduleId
-        );
-
-
-    if (!selectedTraining) return;
-
-
-    const classInfo =
-        fitnessClasses[selectedTraining.class];
-
-
-    // Save chosen training for Online Booking
-    sessionStorage.setItem(
-        "bookingSelection",
-        JSON.stringify({
-            scheduleId: selectedTraining.id,
-            classId: selectedTraining.class,
-            className: classInfo.name,
-            coach: classInfo.coach,
-            weekday: selectedScheduleDay,
-            time: selectedTraining.time
-        })
-    );
-
-
-    // Temporary message until Online Booking is ready
-    alert(
-        "You selected " +
-        classInfo.name +
-        " on " +
-        selectedScheduleDay +
-        " at " +
-        selectedTraining.time +
-        ".\n\nOnline booking will be available soon."
-    );
-
-});
-
-
-// ========================================
-// 12. INITIALIZATION
-// ========================================
-
-scheduleDayButtons.forEach(button => {
-
-    button.setAttribute(
-        "aria-pressed",
-        String(button.classList.contains("active"))
-    );
-
-});
-
-renderSchedule();
-
-if (window.location.hash === "#working-hours") {
-
-    applySelectedFitnessClass();
-
-}
+if(location.hash==='#working-hours')applyClassFromGroup();else loadSchedule();
+if(location.hash==='#online-booking')loadBookingSelection();

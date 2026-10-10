@@ -25,6 +25,7 @@
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#working-hours">Schedule</a></li>
             <li><a href="#group-exercises">Group exercises</a></li>
+            <li><a href="#online-booking">Online booking</a></li>
             <li><a href="#contacts">Contacts</a></li>
         </ul>
         <a class="nav-join" href="#pricing">Find your plan ↗</a>
@@ -82,7 +83,7 @@
                 <div><p class="eyebrow">04 / BEFORE YOU START</p><h2 id="faq-heading">A few good<br>questions.</h2><p>Still wondering about something?<br><a href="#contacts" class="text-link">We're here to help ↗</a></p></div>
                 <div id="faq-list" class="faq-list">
                     <details><summary>How do I buy a membership?</summary><p>Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.</p></details>
-                    <details><summary>Can I cancel a class?</summary><p>Cancellation options will be available in your member account once online booking opens. Until then, contact the club to change your plans.</p></details>
+                    <details><summary>Can I cancel a class?</summary><p>To cancel a confirmed reservation, contact the club team and provide your booking reference.</p></details>
                     <details><summary>Is there a student discount?</summary><p>Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.</p></details>
                     <details><summary>Can I use the pool?</summary><p>Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.</p></details>
                     <details><summary>What should I bring to my first session?</summary><p>Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.</p></details>
@@ -1320,6 +1321,38 @@
 
             </div>
 
+        </section>
+
+
+        <!-- ONLINE BOOKING -->
+        <section id="online-booking" class="page-section section-shell booking-page">
+          <p class="eyebrow">YOUR NEXT SESSION STARTS HERE</p>
+          <h2>Online Booking<span class="schedule-accent">.</span></h2>
+          <p class="booking-intro">Choose a group class in Schedule, then confirm your place here. No account required.</p>
+          <div class="booking-layout">
+            <div class="booking-summary">
+              <p class="eyebrow">01 / YOUR SESSION</p>
+              <h3 id="booking-class">Select a class</h3>
+              <dl>
+                <div><dt>Coach</dt><dd id="booking-coach">—</dd></div>
+                <div><dt>Date</dt><dd id="booking-date-label">—</dd></div>
+                <div><dt>Time</dt><dd id="booking-time">—</dd></div>
+                <div><dt>Available places</dt><dd id="booking-spots">—</dd></div>
+              </dl>
+              <a href="#working-hours" class="text-link">← Change session</a>
+            </div>
+            <form id="booking-form" class="booking-form stacked-form">
+              <p class="eyebrow">02 / YOUR DETAILS</p>
+              <h3>Save your spot.</h3>
+              <label>Session date<input name="date" id="booking-date" type="date" required></label>
+              <label>Full name<input name="name" autocomplete="name" maxlength="100" required placeholder="Your full name"></label>
+              <label>Email<input name="email" type="email" autocomplete="email" maxlength="200" required placeholder="you@example.com"></label>
+              <label>Phone number<input name="phone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+7 700 000 00 00"></label>
+              <p class="small-note">Your details are shared with the club to manage this reservation. This booking does not include payment.</p>
+              <button id="booking-submit" type="submit" class="button">Confirm Booking ↗</button>
+              <p id="booking-status" class="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
         </section>
 
         <!-- Contacts are part of the homepage. -->

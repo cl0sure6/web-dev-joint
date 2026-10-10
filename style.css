@@ -1602,3 +1602,18 @@ input::placeholder, textarea::placeholder { color: #75776e; }
     }
 
 }
+
+/* ONLINE BOOKING */
+.booking-page > h2 {font-size:clamp(42px,5vw,70px);letter-spacing:-.055em;margin:18px 0}
+.booking-intro {color:var(--muted);max-width:650px;line-height:1.7;margin-bottom:40px}
+.booking-layout {display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:start}
+.booking-summary {background:var(--green);padding:40px;min-height:360px}
+.booking-summary h3,.booking-form h3 {font-size:clamp(25px,3vw,38px);margin:15px 0 30px}
+.booking-summary dl {margin:0 0 30px}
+.booking-summary dl>div {display:flex;justify-content:space-between;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}
+.booking-summary dt {color:var(--muted)}.booking-summary dd {margin:0;font-weight:700;text-align:right}
+.booking-form {padding:38px;border:1px solid var(--line)}
+.booking-form label {display:flex;flex-direction:column;gap:9px;margin-bottom:16px;font-weight:600}
+.booking-form input {padding:14px;background:transparent;border:1px solid var(--line);font:inherit;width:100%}
+.booking-form .button {margin-top:20px;cursor:pointer}.booking-form .button:disabled {opacity:.5;cursor:not-allowed}
+@media(max-width:800px){.booking-layout{grid-template-columns:1fr}.booking-summary,.booking-form{padding:25px}}
