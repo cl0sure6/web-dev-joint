@@ -7,10 +7,13 @@ const cli=process.env.PHP_BINARY || 'php';
 const cgi=process.env.PHP_CGI_BINARY || 'php-cgi';
 const runtime=path.join(process.env.MEMBER_TEST_DIR || path.join(__dirname,'.runtime'),String(Date.now()));
 fs.mkdirSync(runtime,{recursive:true});
-const db=path.join(runtime,'club.sqlite');
 
 
-const env={...process.env,CLUB_DATABASE_PATH:db};
+const env={...process.env,CLUB_DB_SCHEMA:'form_test_'+Date.now()+'_'+require('node:crypto').randomBytes(4).toString('hex')};
+process.on('exit',()=>{
+ const cleanup=spawnSync(cli,[path.join(__dirname,'cleanup-postgres.php')],{env,encoding:'utf8'});
+ if(cleanup.status!==0) console.error('Test schema cleanup failed. Run tests/cleanup-postgres.php with CLUB_DB_SCHEMA='+env.CLUB_DB_SCHEMA);
+});
 const seed=spawnSync(cli,[path.join(__dirname,'seed-members.php')],{env,encoding:'utf8'});
 assert.equal(seed.status,0,seed.stderr);
 const {day,scheduleId}=JSON.parse(seed.stdout);

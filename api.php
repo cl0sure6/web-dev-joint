@@ -169,9 +169,9 @@ try {
             respond(['error'=>'Choose a date in the next 30 days.'],422);
         }
         if (!throttle('guest-book', 12, 600)) respond(['error'=>'Too many attempts. Try again later.'],429);
-        $connection->exec('BEGIN IMMEDIATE');
+        $connection->beginTransaction();
         try {
-            $q=$connection->prepare('SELECT s.weekday, s.start_time, c.capacity FROM schedule s JOIN classes c ON c.id=s.class_id WHERE s.id=?');
+            $q=$connection->prepare('SELECT s.weekday, s.start_time, c.capacity FROM schedule s JOIN classes c ON c.id=s.class_id WHERE s.id=? FOR UPDATE OF s');
             $q->execute([$scheduleId]);
             $session=$q->fetch();
             if (!$session || (int)$session['weekday'] !== (int)$sessionDate->format('N')) {
@@ -187,14 +187,14 @@ try {
             if ((int)$q->fetchColumn() >= (int)$session['capacity']) {
                 $connection->exec('ROLLBACK'); respond(['error'=>'Sorry, this class is fully booked.'],409);
             }
-            $q=$connection->prepare('INSERT INTO guest_bookings(schedule_id,date,name,email,phone) VALUES(?,?,?,?,?)');
+            $q=$connection->prepare('INSERT INTO guest_bookings(schedule_id,date,name,email,phone) VALUES(?,?,?,?,?) RETURNING id');
             $q->execute([$scheduleId,$date,$name,$email,$phone]);
-            $bookingId=(int)$connection->lastInsertId();
+            $bookingId=(int)$q->fetchColumn();
             $connection->exec('COMMIT');
             respond(['message'=>'Booking confirmed!','booking_id'=>$bookingId]);
         } catch (Throwable $e) {
             $connection->exec('ROLLBACK');
-            if (str_contains($e->getMessage(),'UNIQUE constraint failed')) respond(['error'=>'This email is already booked for the selected class and date.'],409);
+            if ($e instanceof PDOException && $e->getCode() === '23505') respond(['error'=>'This email is already booked for the selected class and date.'],409);
             throw $e;
         }
     }
@@ -351,10 +351,10 @@ try {
         $connection->rollBack();
     }
     error_log($error->getMessage());
-    if (str_contains($error->getMessage(), 'FOREIGN KEY constraint failed')) {
+    if ($error->getCode() === '23503') {
         respond(['error' => 'This record is used by a schedule or booking. Remove the linked records first.'], 409);
     }
-    if (str_contains($error->getMessage(), 'UNIQUE constraint failed')) {
+    if ($error->getCode() === '23505') {
         respond(['error' => 'This plan code already exists. Choose another code.'], 409);
     }
     respond(['error' => 'The database is unavailable. Please try again shortly.'], 503);

@@ -3,12 +3,19 @@
 declare(strict_types=1);
 
 // Shared by the API, admin pages, and the command-line setup script.
-$config = ['database_path' => dirname(__DIR__) . '/var/club.sqlite', 'timezone' => 'Asia/Qyzylorda'];
+$config = [
+    'database_host' => '127.0.0.1', 'database_port' => 5432,
+    'database_name' => 'form_club', 'database_user' => 'form_app',
+    'database_password' => '', 'database_sslmode' => 'prefer',
+    'database_schema' => 'public',
+    'timezone' => 'Asia/Qyzylorda',
+];
 if (is_file(dirname(__DIR__) . '/config.local.php')) {
     $config = array_replace($config, require dirname(__DIR__) . '/config.local.php');
 }
-if (getenv('CLUB_DATABASE_PATH')) {
-    $config['database_path'] = getenv('CLUB_DATABASE_PATH');
+foreach (['host', 'port', 'name', 'user', 'password', 'sslmode', 'schema'] as $key) {
+    $value = getenv('CLUB_DB_' . strtoupper($key));
+    if ($value !== false) $config['database_' . $key] = $value;
 }
 date_default_timezone_set($config['timezone']);
 
@@ -19,18 +26,20 @@ function database(): PDO
     if ($connection instanceof PDO) {
         return $connection;
     }
-    $directory = dirname($config['database_path']);
-    if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
-        throw new RuntimeException('Cannot create the database directory.');
+    if (!extension_loaded('pdo_pgsql')) throw new RuntimeException('Enable pdo_pgsql in php.ini.');
+    foreach (['host', 'port', 'name', 'sslmode'] as $key) {
+        if (preg_match('/[;\s]/', (string)$config['database_' . $key])) throw new RuntimeException('Invalid PostgreSQL connection setting.');
     }
-    $connection = new PDO('sqlite:' . $config['database_path'], null, null, [
+    $dsn = sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;connect_timeout=5',
+        $config['database_host'], $config['database_port'], $config['database_name'], $config['database_sslmode']);
+    $connection = new PDO($dsn, $config['database_user'], $config['database_password'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    $connection->exec('PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000;');
-    $connection->exec(file_get_contents(__DIR__ . '/schema.sql'));
-    seed_content($connection);
-    seed_demo_schedule($connection);
+    $connection->exec("SET TIME ZONE 'UTC'; SET lock_timeout = '5s'");
+    if (!preg_match('/^[a-z][a-z0-9_]{0,62}$/', $config['database_schema'])) throw new RuntimeException('Invalid database schema.');
+    $connection->prepare("SELECT set_config('search_path', ?, false)")->execute([$config['database_schema']]);
     return $connection;
 }
 
@@ -38,6 +47,7 @@ function seed_content(PDO $connection): void
 {
     // A marker prevents intentionally deleted content from being seeded again.
     $connection->beginTransaction();
+    $connection->query('SELECT pg_advisory_xact_lock(732104, 1)');
     if ($connection->query("SELECT value FROM settings WHERE key = 'initialized'")->fetchColumn()) {
         $connection->commit();
         return;
@@ -94,8 +104,9 @@ function seed_demo_schedule(PDO $connection): void
 {
     // Only initialize demo timetable once, and only if club has no real schedule.
     if ($connection->query("SELECT value FROM settings WHERE key = 'demo_schedule_initialized'")->fetchColumn()) return;
-    $connection->exec('BEGIN IMMEDIATE');
+    $connection->beginTransaction();
     try {
+        $connection->query('SELECT pg_advisory_xact_lock(732104, 2)');
         // Another request may have initialized the schedule while this one waited for the lock.
         if ($connection->query("SELECT value FROM settings WHERE key = 'demo_schedule_initialized'")->fetchColumn()) {
             $connection->exec('COMMIT');
@@ -107,17 +118,17 @@ function seed_demo_schedule(PDO $connection): void
                 ['Sophia Williams','Yoga & Pilates',6], ['Olivia Brown','Pilates & Stretching',4],
                 ['Emma Thompson','Swimming',5], ['Alex Morgan','Functional Training',7],
             ];
-            $insT = $connection->prepare('INSERT INTO trainers(name,specialization,experience) VALUES (?,?,?)');
+            $insT = $connection->prepare('INSERT INTO trainers(name,specialization,experience) VALUES (?,?,?) RETURNING id');
             $trainerIds = [];
-            foreach ($trainers as $trainer) { $insT->execute($trainer); $trainerIds[] = (int)$connection->lastInsertId(); }
+            foreach ($trainers as $trainer) { $insT->execute($trainer); $trainerIds[] = (int)$insT->fetchColumn(); }
             $classes = [
                 ['Yoga', $trainerIds[0],15,60], ['Pilates',$trainerIds[1],12,50],
                 ['Swimming',$trainerIds[2],10,45], ['Stretching',$trainerIds[1],15,45],
                 ['Functional Training',$trainerIds[3],12,60], ['Aerobics',$trainerIds[0],20,50],
             ];
-            $insC = $connection->prepare('INSERT INTO classes(name,trainer_id,capacity,duration) VALUES (?,?,?,?)');
+            $insC = $connection->prepare('INSERT INTO classes(name,trainer_id,capacity,duration) VALUES (?,?,?,?) RETURNING id');
             $classIds = [];
-            foreach ($classes as $class) { $insC->execute($class); $classIds[] = (int)$connection->lastInsertId(); }
+            foreach ($classes as $class) { $insC->execute($class); $classIds[] = (int)$insC->fetchColumn(); }
             $entries = [
                 1=>[[0,'08:00'],[1,'10:00'],[2,'12:00'],[4,'17:00'],[5,'19:00']],
                 2=>[[3,'08:00'],[2,'10:00'],[0,'12:00'],[1,'17:00'],[4,'19:00']],
@@ -132,7 +143,7 @@ function seed_demo_schedule(PDO $connection): void
                 $insS->execute([$classIds[$ix],$day,$time,'Studio '.($ix+1)]);
             }
         }
-        $connection->prepare("INSERT OR REPLACE INTO settings(key,value) VALUES('demo_schedule_initialized','1')")->execute();
+        $connection->exec("INSERT INTO settings(key,value) VALUES('demo_schedule_initialized','1') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value");
         $connection->exec('COMMIT');
     } catch (Throwable $e) { $connection->exec('ROLLBACK'); throw $e; }
 }
@@ -196,18 +207,14 @@ function throttle(string $action, int $limit, int $seconds): bool
     // Persist by IP so clearing cookies cannot bypass the limit.
     $key = hash('sha256', $action . ':' . ($_SERVER['REMOTE_ADDR'] ?? 'cli'));
     $connection = database();
-    $connection->beginTransaction();
     $connection->prepare('DELETE FROM rate_limits WHERE started_at < ?')->execute([time() - 3600]);
-    $query = $connection->prepare('SELECT attempts, started_at FROM rate_limits WHERE key = ?');
-    $query->execute([$key]);
-    $record = $query->fetch();
-    if (!$record || time() - $record['started_at'] >= $seconds) {
-        $connection->prepare('INSERT OR REPLACE INTO rate_limits (key, attempts, started_at) VALUES (?, 1, ?)')->execute([$key, time()]);
-        $connection->commit();
-        return true;
-    }
-    $connection->prepare('UPDATE rate_limits SET attempts = attempts + 1 WHERE key = ?')->execute([$key]);
-    $connection->commit();
-    return $record['attempts'] < $limit;
+    $query = $connection->prepare('INSERT INTO rate_limits(key,attempts,started_at) VALUES(?,1,?)
+        ON CONFLICT(key) DO UPDATE SET
+        attempts=CASE WHEN rate_limits.started_at<=? THEN 1 ELSE rate_limits.attempts+1 END,
+        started_at=CASE WHEN rate_limits.started_at<=? THEN EXCLUDED.started_at ELSE rate_limits.started_at END
+        RETURNING attempts');
+    $now = time();
+    $query->execute([$key,$now,$now-$seconds,$now-$seconds]);
+    return (int)$query->fetchColumn() <= $limit;
 }
 

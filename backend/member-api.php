@@ -87,7 +87,7 @@ function member_action(string $action, array $input, PDO $db): void
             try {
                 $db->prepare("INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,'user')")->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
             } catch (PDOException $error) {
-                if (str_contains($error->getMessage(), 'UNIQUE')) respond(['error' => 'An account with this email already exists. Please sign in.'], 409);
+                if ($error->getCode() === '23505') respond(['error' => 'An account with this email already exists. Please sign in.'], 409);
                 throw $error;
             }
         }
@@ -119,7 +119,7 @@ function member_action(string $action, array $input, PDO $db): void
             try {
                 $db->prepare('UPDATE users SET name=?,email=? WHERE id=?')->execute([$name, $email, $member['id']]);
             } catch (PDOException $error) {
-                if (str_contains($error->getMessage(), 'UNIQUE')) respond(['error' => 'This email is already used by another account.'], 409);
+                if ($error->getCode() === '23505') respond(['error' => 'This email is already used by another account.'], 409);
                 throw $error;
             }
             respond(['message' => 'Your profile has been updated.']);
@@ -133,17 +133,17 @@ function member_action(string $action, array $input, PDO $db): void
     }
     if ($action === 'member-cancel') {
         $id = number_field($input, 'id', 1, PHP_INT_MAX);
-        $query = $db->prepare("UPDATE bookings SET status='cancelled' WHERE id=? AND user_id=? AND status='confirmed' AND date || ' ' || (SELECT start_time FROM schedule WHERE id=bookings.schedule_id)>?");
+        $query = $db->prepare("UPDATE bookings SET status='cancelled' WHERE id=? AND user_id=? AND status='confirmed' AND date + (SELECT start_time::time FROM schedule WHERE id=bookings.schedule_id)>CAST(? AS timestamp)");
         $query->execute([$id, $member['id'], date('Y-m-d H:i')]);
         if (!$query->rowCount()) respond(['error' => 'This booking cannot be cancelled. It may have started or already been cancelled.'], 409);
         respond(['message' => 'Your booking has been cancelled.']);
     }
     $date = member_date($input);
     $id = number_field($input, 'schedule_id', 1, PHP_INT_MAX);
-    // Acquire the write lock before checking capacity so concurrent requests cannot overbook.
-    $db->exec('BEGIN IMMEDIATE');
+    // Guest and member requests lock the same schedule row before checking capacity.
+    $db->beginTransaction();
     try {
-        $query = $db->prepare('SELECT s.*, c.capacity FROM schedule s JOIN classes c ON c.id=s.class_id WHERE s.id=?');
+        $query = $db->prepare('SELECT s.*, c.capacity FROM schedule s JOIN classes c ON c.id=s.class_id WHERE s.id=? FOR UPDATE OF s');
         $query->execute([$id]);
         $slot = $query->fetch();
         $error = null;

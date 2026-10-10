@@ -28,8 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $plan = $query->fetch();
             if (!$plan) throw new RuntimeException('Choose a membership plan.');
             $end = $start->modify('+' . ((int)$plan['duration_days'] - 1) . ' days')->format('Y-m-d');
-            $db->exec('BEGIN IMMEDIATE');
+            $db->beginTransaction();
             try {
+                $lock = $db->prepare('SELECT id FROM users WHERE id=? FOR UPDATE');
+                $lock->execute([$userId]);
                 $query = $db->prepare("SELECT id FROM user_memberships WHERE user_id=? AND status='active' AND starts_on<=? AND ends_on>=?");
                 $query->execute([$userId, $end, $raw]);
                 if ($query->fetch()) throw new RuntimeException('This member already has a membership covering these dates. Choose a later date or cancel the existing membership.');
