@@ -25,9 +25,11 @@
             <li><a href="#pricing">Pricing</a></li>
             <li><a href="#working-hours">Schedule</a></li>
             <li><a href="#group-exercises">Group exercises</a></li>
+            <li><a href="#online-booking">Online booking</a></li>
             <li><a href="#contacts">Contacts</a></li>
+            <li class="member-mobile-link"><a data-account-link href="account/login.php">Sign in ↗</a></li>
         </ul>
-        <a class="nav-join" id="member-account-link" href="account/login.php">Sign in ↗</a>
+        <a class="nav-join" id="member-account-link" data-account-link href="account/login.php">Sign in ↗</a>
     </nav>
 
     <main id="main-content">
@@ -82,7 +84,7 @@
                 <div><p class="eyebrow">04 / BEFORE YOU START</p><h2 id="faq-heading">A few good<br>questions.</h2><p>Still wondering about something?<br><a href="#contacts" class="text-link">We're here to help ↗</a></p></div>
                 <div id="faq-list" class="faq-list">
                     <details><summary>How do I buy a membership?</summary><p>Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.</p></details>
-                    <details><summary>Can I cancel a class?</summary><p>Yes. Open My bookings in your member account and cancel before the class starts. Your spot will become available to another member.</p></details>
+                    <details><summary>Can I cancel a class?</summary><p>For member bookings, open My bookings in your account and cancel before the class starts. For guest reservations, contact the club team with your booking reference.</p></details>
                     <details><summary>Is there a student discount?</summary><p>Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.</p></details>
                     <details><summary>Can I use the pool?</summary><p>Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.</p></details>
                     <details><summary>What should I bring to my first session?</summary><p>Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.</p></details>
@@ -103,11 +105,284 @@
             <p>Free weights, cardio, CrossFit, and recovery areas.</p>
         </section>
 
-        <!-- Coaches -->
+        <!-- COACHES PAGE -->
         <section id="coaches" class="coaches-section page-section section-shell">
-            <p class="eyebrow">PEOPLE IN YOUR CORNER</p>
-            <h2>Our Coaches</h2>
-            <p>Certified trainers ready to assist your progress.</p>
+
+            <!-- Page Header -->
+            <div class="coaches-header">
+                <div>
+                    <p class="eyebrow">PEOPLE IN YOUR CORNER</p>
+                    <h2>Meet Our Coaches<span class="orange-dot">.</span></h2>
+                    <p class="coaches-description">
+                        Great results start with great guidance.
+                        Meet the professionals who will help you
+                        become stronger, healthier, and more confident.
+                    </p>
+                </div>
+
+                <div class="coaches-count">
+                    <span>06</span>
+                    <p>PROFESSIONAL<br>TRAINERS</p>
+                </div>
+            </div>
+
+            <!-- Coach Filters -->
+            <div class="coach-filters">
+
+                <button class="coach-filter active" data-filter="all">
+                    All Coaches
+                </button>
+
+                <button class="coach-filter" data-filter="strength">
+                    Strength
+                </button>
+
+                <button class="coach-filter" data-filter="yoga">
+                    Yoga & Pilates
+                </button>
+
+                <button class="coach-filter" data-filter="functional">
+                    Functional
+                </button>
+
+                <button class="coach-filter" data-filter="swimming">
+                    Swimming
+                </button>
+
+            </div>
+
+            <!-- Coaches Grid -->
+            <div class="coaches-grid">
+
+                <!-- COACH 1 -->
+                <article class="coach-card" data-category="strength">
+
+                    <div class="coach-image">
+                        <img src="assets/coach1.jpg" alt="Daniel Carter">
+                        <span class="coach-number">01 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            STRENGTH & CONDITIONING
+                        </p>
+
+                        <h3>Daniel Carter</h3>
+
+                        <p class="coach-experience">
+                            8 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Helping members build strength,
+                            improve endurance, and achieve
+                            their fitness goals.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Daniel Carter">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+
+                <!-- COACH 2 -->
+                <article class="coach-card" data-category="yoga">
+
+                    <div class="coach-image">
+                        <img src="assets/coach2.jpg" alt="Sophia Williams">
+                        <span class="coach-number">02 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            YOGA & PILATES
+                        </p>
+
+                        <h3>Sophia Williams</h3>
+
+                        <p class="coach-experience">
+                            6 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Creating balance between body
+                            and mind through mindful movement,
+                            flexibility, and breathing.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Sophia Williams">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+
+                <!-- COACH 3 -->
+                <article class="coach-card" data-category="functional">
+
+                    <div class="coach-image">
+                        <img src="assets/coach3.jpg" alt="Alex Morgan">
+                        <span class="coach-number">03 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            FUNCTIONAL TRAINING
+                        </p>
+
+                        <h3>Alex Morgan</h3>
+
+                        <p class="coach-experience">
+                            7 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Specializing in functional movement,
+                            athletic performance, and
+                            full-body conditioning.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Alex Morgan">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+
+                <!-- COACH 4 -->
+                <article class="coach-card" data-category="strength">
+
+                    <div class="coach-image">
+                        <img src="assets/coach4.jpg" alt="Michael Johnson">
+                        <span class="coach-number">04 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            PERSONAL TRAINING
+                        </p>
+
+                        <h3>Michael Johnson</h3>
+
+                        <p class="coach-experience">
+                            10 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Personalized training programs
+                            designed to build muscle,
+                            improve fitness, and stay motivated.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Michael Johnson">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+
+                <!-- COACH 5 -->
+                <article class="coach-card" data-category="swimming">
+
+                    <div class="coach-image">
+                        <img src="assets/coach5.jpg" alt="Emma Thompson">
+                        <span class="coach-number">05 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            SWIMMING COACH
+                        </p>
+
+                        <h3>Emma Thompson</h3>
+
+                        <p class="coach-experience">
+                            5 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Teaching swimming techniques
+                            and helping members feel
+                            confident and safe in the water.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Emma Thompson">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+
+                <!-- COACH 6 -->
+                <article class="coach-card" data-category="yoga">
+
+                    <div class="coach-image">
+                        <img src="assets/coach6.jpg" alt="Olivia Brown">
+                        <span class="coach-number">06 / 06</span>
+                    </div>
+
+                    <div class="coach-info">
+
+                        <p class="coach-specialization">
+                            PILATES & STRETCHING
+                        </p>
+
+                        <h3>Olivia Brown</h3>
+
+                        <p class="coach-experience">
+                            4 years of experience
+                        </p>
+
+                        <p class="coach-bio">
+                            Helping members improve posture,
+                            flexibility, and overall
+                            physical well-being.
+                        </p>
+
+                        <button class="coach-book-btn"
+                                data-coach="Olivia Brown">
+                            Book a Session <span>↗</span>
+                        </button>
+
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="coaches-bottom">
+
+                <div>
+                    <p class="eyebrow">YOUR FITNESS JOURNEY STARTS HERE</p>
+                    <h2>Find your perfect coach.</h2>
+                    <p>
+                        Not sure which trainer is right for you?
+                        Our team will help you choose.
+                    </p>
+                </div>
+
+                <a href="#contacts" class="button">
+                    Contact Our Team ↗
+                </a>
+
+            </div>
+
         </section>
 
         <!-- Pricing -->
@@ -226,14 +501,860 @@
             </ul>
         </section>
 
-        <!-- Schedule -->
-        <section id="working-hours" class="page-section section-shell">
-            <p class="eyebrow">MAKE TIME FOR YOU</p><h2>Class Schedule</h2><p>Find a session that fits your day. Sign in to view available classes and book up to 28 days ahead.</p><a href="account/index.php#schedule" class="button">Explore the schedule ↗</a>
+        <!-- ========================================
+            CLASS SCHEDULE PAGE
+        ======================================== -->
+
+        <section id="working-hours"
+                class="page-section section-shell schedule-section">
+
+            <!-- PAGE HEADER -->
+            <div class="schedule-header">
+
+                <div class="schedule-header-content">
+
+                    <p class="eyebrow">
+                        MAKE TIME FOR YOU
+                    </p>
+
+                    <h2>
+                        Class Schedule<span class="schedule-accent">.</span>
+                    </h2>
+
+                    <p class="schedule-description">
+                        Find the perfect time to move.
+                        Explore our weekly fitness schedule,
+                        discover your favorite classes,
+                        and plan your next workout.
+                    </p>
+
+                </div>
+
+                <div class="schedule-header-info">
+
+                    <span>07</span>
+
+                    <p>
+                        DAYS OF<br>
+                        MOVEMENT
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHEDULE CONTROLS -->
+            <div class="schedule-controls">
+
+                <div class="schedule-controls-top">
+
+                    <div>
+                        <p class="eyebrow">
+                            PLAN YOUR WEEK
+                        </p>
+
+                        <h3>Weekly Timetable</h3>
+                    </div>
+
+                    <div class="schedule-class-select">
+
+                        <label for="schedule-class-filter">
+                            FILTER BY CLASS
+                        </label>
+
+                        <select id="schedule-class-filter">
+
+                            <option value="all">
+                                All Classes
+                            </option>
+
+                            <option value="yoga">
+                                Yoga
+                            </option>
+
+                            <option value="pilates">
+                                Pilates
+                            </option>
+
+                            <option value="swimming">
+                                Swimming
+                            </option>
+
+                            <option value="stretching">
+                                Stretching
+                            </option>
+
+                            <option value="functional">
+                                Functional Training
+                            </option>
+
+                            <option value="aerobics">
+                                Aerobics
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WEEKDAY SELECTOR -->
+                <div class="schedule-weekdays">
+
+                    <button
+                        type="button"
+                        class="schedule-day active"
+                        data-day="monday">
+
+                        <span>MON</span>
+                        <strong>Monday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="tuesday">
+
+                        <span>TUE</span>
+                        <strong>Tuesday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="wednesday">
+
+                        <span>WED</span>
+                        <strong>Wednesday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="thursday">
+
+                        <span>THU</span>
+                        <strong>Thursday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="friday">
+
+                        <span>FRI</span>
+                        <strong>Friday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="saturday">
+
+                        <span>SAT</span>
+                        <strong>Saturday</strong>
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="schedule-day"
+                        data-day="sunday">
+
+                        <span>SUN</span>
+                        <strong>Sunday</strong>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHEDULE RESULTS -->
+            <div class="schedule-results-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR TRAINING PLAN
+                    </p>
+
+                    <h3 id="schedule-selected-day">
+                        Monday
+                    </h3>
+
+                </div>
+
+                <p class="schedule-results-count">
+
+                    <span id="schedule-results-count">0</span>
+                    classes available
+
+                </p>
+
+            </div>
+
+
+            <!-- TABLE HEADER -->
+            <div class="schedule-table-heading">
+
+                <span>TIME</span>
+
+                <span>CLASS</span>
+
+                <span>COACH</span>
+
+                <span>AVAILABLE</span>
+
+                <span>ACTION</span>
+
+            </div>
+
+
+            <!-- CLASSES WILL BE GENERATED HERE -->
+            <div id="schedule-list"
+                class="schedule-list">
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+            <div id="schedule-empty"
+                class="schedule-empty"
+                hidden>
+
+                <h3>No classes found</h3>
+
+                <p>
+                    There are no classes matching
+                    your selection.
+                    Try another day or class.
+                </p>
+
+                <button
+                    type="button"
+                    id="schedule-reset"
+                    class="button">
+
+                    Show All Classes ↗
+
+                </button>
+
+            </div>
+
+
+            <!-- SCHEDULE BOTTOM -->
+            <div class="schedule-bottom">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR NEXT WORKOUT STARTS HERE
+                    </p>
+
+                    <h2>
+                        Make movement a habit.
+                    </h2>
+
+                    <p>
+                        Not sure which class fits your goals?
+                        Our coaches are here to guide you.
+                    </p>
+
+                </div>
+
+                <a href="#coaches"
+                class="button">
+
+                    Meet Our Coaches ↗
+
+                </a>
+
+            </div>
+
+        </section>
+        <!-- ========================================
+            GROUP EXERCISES PAGE
+        ======================================== -->
+
+        <section id="group-exercises" class="page-section section-shell group-section">
+
+            <!-- HEADER -->
+            <div class="group-header">
+
+                <div class="group-header-content">
+
+                    <p class="eyebrow">MOVE TOGETHER. GROW TOGETHER.</p>
+
+                    <h2>
+                        Find Your<br>
+                        Kind of Movement<span class="group-accent">.</span>
+                    </h2>
+
+                    <p class="group-description">
+                        Whether you're building strength, improving
+                        flexibility, or simply looking for a new way
+                        to move, there's a class for you.
+                        Find your people and enjoy every session.
+                    </p>
+
+                </div>
+
+                <div class="group-header-stat">
+
+                    <span class="group-stat-number">06</span>
+
+                    <span class="group-stat-label">
+                        WAYS TO<br>
+                        GET MOVING
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTERS -->
+            <div class="group-filter-wrapper">
+
+                <div class="group-filters">
+
+                    <button
+                        class="group-filter active"
+                        data-level="all"
+                        type="button">
+                        All Classes
+                    </button>
+
+                    <button
+                        class="group-filter"
+                        data-level="beginner"
+                        type="button">
+                        Beginner
+                    </button>
+
+                    <button
+                        class="group-filter"
+                        data-level="intermediate"
+                        type="button">
+                        Intermediate
+                    </button>
+
+                    <button
+                        class="group-filter"
+                        data-level="advanced"
+                        type="button">
+                        Advanced
+                    </button>
+
+                </div>
+
+                <p class="group-results">
+                    Showing <span id="group-count">6</span> classes
+                </p>
+
+            </div>
+
+
+            <!-- CLASSES GRID -->
+            <div class="group-grid">
+
+
+                <!-- CLASS 1: YOGA -->
+                <article
+                    class="group-card"
+                    data-level="beginner">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/yoga.jpg"
+                            alt="People practicing yoga"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            MIND & BODY
+                        </span>
+
+                        <span class="group-card-index">
+                            01 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Yoga</h3>
+
+                            <span class="group-level beginner">
+                                Beginner
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Find balance, improve flexibility,
+                            and reduce stress through mindful
+                            movement and breathing exercises.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>60 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>15 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="yoga">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- CLASS 2: PILATES -->
+                <article
+                    class="group-card"
+                    data-level="beginner">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/pilates.jpg"
+                            alt="Pilates training session"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            CORE & CONTROL
+                        </span>
+
+                        <span class="group-card-index">
+                            02 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Pilates</h3>
+
+                            <span class="group-level beginner">
+                                Beginner
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Strengthen your core, improve posture,
+                            and develop better body control through
+                            focused and controlled exercises.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>50 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>12 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="pilates">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- CLASS 3: SWIMMING -->
+                <article
+                    class="group-card"
+                    data-level="intermediate">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/swimming.jpg"
+                            alt="Swimming training in a pool"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            WATER & ENDURANCE
+                        </span>
+
+                        <span class="group-card-index">
+                            03 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Swimming</h3>
+
+                            <span class="group-level intermediate">
+                                Intermediate
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Build endurance, improve swimming
+                            technique, and enjoy a refreshing
+                            full-body workout in the pool.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>45 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>10 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="swimming">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- CLASS 4: STRETCHING -->
+                <article
+                    class="group-card"
+                    data-level="beginner">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/stretching.jpg"
+                            alt="Stretching exercises"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            FLEXIBILITY & RECOVERY
+                        </span>
+
+                        <span class="group-card-index">
+                            04 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Stretching</h3>
+
+                            <span class="group-level beginner">
+                                Beginner
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Release muscle tension, increase
+                            flexibility, and improve mobility
+                            with guided stretching exercises.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>45 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>15 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="stretching">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- CLASS 5: FUNCTIONAL TRAINING -->
+                <article
+                    class="group-card"
+                    data-level="advanced">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/functional.jpg"
+                            alt="Functional fitness training"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            STRENGTH & PERFORMANCE
+                        </span>
+
+                        <span class="group-card-index">
+                            05 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Functional Training</h3>
+
+                            <span class="group-level advanced">
+                                Advanced
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Challenge your strength, coordination,
+                            and endurance through dynamic
+                            full-body movements and exercises.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>60 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>12 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="functional">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- CLASS 6: AEROBICS -->
+                <article
+                    class="group-card"
+                    data-level="intermediate">
+
+                    <div class="group-card-image">
+
+                        <img
+                            src="assets/aerobics.jpg"
+                            alt="Group aerobics class"
+                            loading="lazy">
+
+                        <span class="group-card-label">
+                            CARDIO & ENERGY
+                        </span>
+
+                        <span class="group-card-index">
+                            06 / 06
+                        </span>
+
+                    </div>
+
+                    <div class="group-card-content">
+
+                        <div class="group-card-top">
+
+                            <h3>Aerobics</h3>
+
+                            <span class="group-level intermediate">
+                                Intermediate
+                            </span>
+
+                        </div>
+
+                        <p class="group-card-description">
+                            Boost your energy, improve
+                            cardiovascular fitness, and enjoy
+                            a fun workout with music and movement.
+                        </p>
+
+                        <div class="group-card-details">
+
+                            <div>
+                                <span>DURATION</span>
+                                <strong>50 min</strong>
+                            </div>
+
+                            <div>
+                                <span>GROUP SIZE</span>
+                                <strong>20 people</strong>
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="#working-hours"
+                            class="group-schedule-btn"
+                            data-class="aerobics">
+
+                            View Schedule
+
+                            <span>↗</span>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <!-- BOTTOM SECTION -->
+            <div class="group-bottom">
+
+                <div>
+
+                    <p class="eyebrow">
+                        NOT SURE WHERE TO START?
+                    </p>
+
+                    <h2>
+                        There's a class for everyone.
+                    </h2>
+
+                    <p>
+                        Our team can help you find the right
+                        workout based on your goals,
+                        experience, and preferences.
+                    </p>
+
+                </div>
+
+                <a href="#contacts" class="button">
+                    Get in Touch ↗
+                </a>
+
+            </div>
+
         </section>
 
-        <!-- Group exercises -->
-        <section id="group-exercises" class="page-section section-shell">
-            <p class="eyebrow">FIND YOUR PEOPLE</p><h2>Group Exercises</h2><p>Make time for movement. Sign in to browse the current class schedule and book your next session.</p><a href="account/index.php#schedule" class="button">Find a class ↗</a>
+
+        <!-- ONLINE BOOKING -->
+        <section id="online-booking" class="page-section section-shell booking-page">
+          <p class="eyebrow">YOUR NEXT SESSION STARTS HERE</p>
+          <h2>Online Booking<span class="schedule-accent">.</span></h2>
+          <p class="booking-intro">Choose a group class in Schedule, then confirm your place here. No account required.</p>
+           <p class="small-note">Already a member? <a href="account/index.php#schedule">Book through My account</a> to manage your reservations and cancellations there.</p>
+          <div class="booking-layout">
+            <div class="booking-summary">
+              <p class="eyebrow">01 / YOUR SESSION</p>
+              <h3 id="booking-class">Select a class</h3>
+              <dl>
+                <div><dt>Coach</dt><dd id="booking-coach">—</dd></div>
+                <div><dt>Date</dt><dd id="booking-date-label">—</dd></div>
+                <div><dt>Time</dt><dd id="booking-time">—</dd></div>
+                <div><dt>Available places</dt><dd id="booking-spots">—</dd></div>
+              </dl>
+              <a href="#working-hours" class="text-link">← Change session</a>
+            </div>
+            <form id="booking-form" class="booking-form stacked-form">
+              <p class="eyebrow">02 / YOUR DETAILS</p>
+              <h3>Save your spot.</h3>
+              <label>Session date<input name="date" id="booking-date" type="date" required></label>
+              <label>Full name<input name="name" autocomplete="name" maxlength="100" required placeholder="Your full name"></label>
+              <label>Email<input name="email" type="email" autocomplete="email" maxlength="200" required placeholder="you@example.com"></label>
+              <label>Phone number<input name="phone" type="tel" autocomplete="tel" maxlength="30" required placeholder="+7 700 000 00 00"></label>
+              <p class="small-note">Your details are shared with the club to manage this reservation. This booking does not include payment.</p>
+              <button id="booking-submit" type="submit" class="button">Confirm Booking ↗</button>
+              <p id="booking-status" class="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
         </section>
 
         <!-- Contacts are part of the homepage. -->

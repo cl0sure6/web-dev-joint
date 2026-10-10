@@ -188,7 +188,7 @@ function render() {
     }
     const definitions = {
         users: { columns: ['Name', 'Email', 'Role', 'Joined'], cells: (row) => [row.name, row.email, row.role, row.created_at.slice(0, 10)] },
-        bookings: { columns: ['Member', 'Class', 'Date', 'Time', 'Status'], cells: (row) => [row.member, row.class_name, row.date, row.start_time, row.status] },
+        bookings: { columns: ['Member', 'Email', 'Phone', 'Class', 'Date', 'Time', 'Status'], cells: (row) => [row.member, row.email || '—', row.phone || '—', row.class_name, row.date, row.start_time, row.status] },
         reviews: { columns: ['Member', 'Rating', 'Story', 'Status', 'Date'], cells: (row) => [row.name, `${row.rating} / 5`, row.comment, row.published ? 'Published' : 'Pending', row.created_at.slice(0, 10)] },
         messages: { columns: ['From', 'Email', 'Message', 'Status', 'Date'], cells: (row) => [row.name, row.email, row.message, row.is_read ? 'Read' : 'Unread', row.created_at.slice(0, 10)] },
     };

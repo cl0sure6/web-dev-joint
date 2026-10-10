@@ -64,10 +64,11 @@ if ($method === 'GET' && $action === 'member-schedule') {
     $member = member_required();
     $date = member_date($_GET);
     $query = $connection->prepare("SELECT s.id, s.start_time, s.room, c.name, c.description, c.duration, c.capacity, t.name AS trainer,
-        (SELECT COUNT(*) FROM bookings b WHERE b.schedule_id=s.id AND b.date=? AND b.status='confirmed') AS booked,
+        (SELECT COUNT(*) FROM bookings b WHERE b.schedule_id=s.id AND b.date=? AND b.status='confirmed') +
+        (SELECT COUNT(*) FROM guest_bookings g WHERE g.schedule_id=s.id AND g.date=? AND g.status='confirmed') AS booked,
         (SELECT b.id FROM bookings b WHERE b.schedule_id=s.id AND b.date=? AND b.user_id=? AND b.status='confirmed') AS booking_id
         FROM schedule s JOIN classes c ON c.id=s.class_id LEFT JOIN trainers t ON t.id=c.trainer_id WHERE s.weekday=? ORDER BY s.start_time, s.id");
-    $query->execute([$date->format('Y-m-d'), $date->format('Y-m-d'), $member['id'], (int) $date->format('N')]);
+    $query->execute([$date->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'), $member['id'], (int) $date->format('N')]);
     $classes = $query->fetchAll();
     foreach ($classes as &$class) $class['started'] = $date->format('Y-m-d') . ' ' . $class['start_time'] <= date('Y-m-d H:i');
     unset($class);
@@ -148,8 +149,10 @@ function member_action(string $action, array $input, PDO $db): void
         $error = null;
         if (!$slot || (int) $slot['weekday'] !== (int) $date->format('N')) $error = 'This class does not run on the selected date.';
         elseif ($date->format('Y-m-d') . ' ' . $slot['start_time'] <= date('Y-m-d H:i')) $error = 'This class has already started.';
-        $query = $db->prepare("SELECT COUNT(*) FROM bookings WHERE schedule_id=? AND date=? AND status='confirmed'");
-        $query->execute([$id, $date->format('Y-m-d')]);
+        $query = $db->prepare("SELECT
+            (SELECT COUNT(*) FROM bookings WHERE schedule_id=? AND date=? AND status='confirmed') +
+            (SELECT COUNT(*) FROM guest_bookings WHERE schedule_id=? AND date=? AND status='confirmed')");
+        $query->execute([$id, $date->format('Y-m-d'), $id, $date->format('Y-m-d')]);
         if (!$error && (int) $query->fetchColumn() >= (int) $slot['capacity']) $error = 'This class is full. Please choose another session.';
         if ($error) {
             $db->exec('ROLLBACK');

@@ -156,10 +156,11 @@ async function loadClub() {
     try {
         const session = await request('session');
         csrfToken = session.csrf;
-        const accountLink = document.getElementById('member-account-link');
         if (session.user) {
+            document.querySelectorAll('[data-account-link]').forEach(accountLink => {
             accountLink.textContent = session.user.role === 'admin' ? 'Administration ↗' : 'My account ↗';
             accountLink.href = session.user.role === 'admin' ? 'admin/index.php' : 'account/index.php';
+            });
         }
         if (session.user?.role === 'user') {
             document.getElementById('review-fields').disabled = false;
@@ -176,3 +177,340 @@ async function loadClub() {
     }
 }
 loadClub();
+
+
+
+// ========================================
+// COACHES PAGE FUNCTIONALITY
+// ========================================
+
+// Coach filtering
+
+const coachFilters = document.querySelectorAll(".coach-filter");
+const coachCards = document.querySelectorAll(".coach-card");
+
+coachFilters.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const selectedCategory = button.dataset.filter;
+
+        // Remove active class from all buttons
+        coachFilters.forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        // Activate clicked button
+        button.classList.add("active");
+
+        // Filter coach cards
+        coachCards.forEach(card => {
+
+            const coachCategory = card.dataset.category;
+
+            if (
+                selectedCategory === "all" ||
+                selectedCategory === coachCategory
+            ) {
+                card.hidden = false;
+            } else {
+                card.hidden = true;
+            }
+
+        });
+
+    });
+
+});
+
+
+// ========================================
+// BOOK A SESSION
+// ========================================
+
+const coachBookingButtons =
+    document.querySelectorAll(".coach-book-btn");
+
+coachBookingButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const coachName = button.dataset.coach;
+
+        // Get existing contact form
+        const contactMessage = document.querySelector(
+            "#contact-form textarea[name='message']"
+        );
+
+        // Automatically insert selected coach
+        if (contactMessage) {
+
+            contactMessage.value =
+                `Hello! I would like to book a personal training session with ${coachName}. Please contact me with available dates and times.`;
+
+        }
+
+        // Redirect to contact section
+        window.location.hash = "contacts";
+
+    });
+
+});
+
+// ========================================
+// GROUP EXERCISES FUNCTIONALITY
+// ========================================
+
+
+// FILTER ELEMENTS
+
+const groupFilterButtons =
+    document.querySelectorAll(".group-filter");
+
+const groupCards =
+    document.querySelectorAll(".group-card");
+
+const groupCount =
+    document.getElementById("group-count");
+
+
+// ========================================
+// FILTER CLASSES BY DIFFICULTY
+// ========================================
+
+groupFilterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        // Selected difficulty
+        const selectedLevel = button.dataset.level;
+
+
+        // Remove active state
+        groupFilterButtons.forEach(btn => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+        });
+
+
+        // Activate selected filter
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+
+
+        // Count visible classes
+        let visibleClasses = 0;
+
+
+        // Filter cards
+        groupCards.forEach(card => {
+
+            const cardLevel = card.dataset.level;
+
+            const shouldShow =
+                selectedLevel === "all" ||
+                selectedLevel === cardLevel;
+
+
+            // Show or hide card
+            card.hidden = !shouldShow;
+
+
+            if (shouldShow) {
+                visibleClasses++;
+            }
+
+        });
+
+
+        // Update counter
+        groupCount.textContent = visibleClasses;
+
+    });
+
+});
+
+
+// Set initial filter accessibility state
+
+groupFilterButtons.forEach(button => {
+    button.setAttribute(
+        "aria-pressed",
+        String(button.classList.contains("active"))
+    );
+});
+
+
+// ========================================
+// VIEW SCHEDULE BUTTON
+// ========================================
+
+// Remember the selected class.
+// The Schedule page will use this in the next stage.
+
+const groupScheduleButtons =
+    document.querySelectorAll(".group-schedule-btn");
+
+groupScheduleButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const selectedClass = button.dataset.class;
+
+        // Save class selection in this browser tab
+        sessionStorage.setItem(
+            "selectedFitnessClass",
+            selectedClass
+        );
+
+    });
+
+});
+
+
+// ========================================
+// CLASS SCHEDULE & ONLINE BOOKING (SQLite-backed)
+// ========================================
+const scheduleDays = [...document.querySelectorAll('.schedule-day')];
+const scheduleFilter = document.getElementById('schedule-class-filter');
+const scheduleList = document.getElementById('schedule-list');
+const scheduleEmpty = document.getElementById('schedule-empty');
+const dateInput = document.getElementById('booking-date');
+const bookingForm = document.getElementById('booking-form');
+const weekdayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+let selectedDay = 'monday';
+let selectedClass = 'all';
+let displayedSessions = [];
+let bookingSelection = null;
+
+function localISO(date) {
+    return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
+}
+function nextDateForDay(day) {
+    const numbers = {sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};
+    const date = new Date();
+    date.setHours(0,0,0,0);
+    date.setDate(date.getDate()+(numbers[day]-date.getDay()+7)%7);
+    return localISO(date);
+}
+async function fetchPublicSchedule(date) {
+    const response=await fetch(`api.php?action=public-schedule&date=${encodeURIComponent(date)}`,{credentials:'same-origin'});
+    const result=await response.json();
+    if(!response.ok)throw new Error(result.error||'Unable to load schedule.');
+    return result;
+}
+function endAt(start,minutes) {
+    const [h,m]=start.split(':').map(Number);
+    const total=h*60+m+Number(minutes);
+    return `${String(Math.floor(total/60)%24).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;
+}
+async function loadSchedule() {
+    const date = nextDateForDay(selectedDay);
+    document.getElementById('schedule-selected-day').textContent = `${selectedDay[0].toUpperCase()+selectedDay.slice(1)} · ${date}`;
+    scheduleList.textContent = 'Loading available sessions...';
+    try {
+        const result = await fetchPublicSchedule(date);
+        displayedSessions = result.sessions;
+        const rows=displayedSessions.filter(row=>selectedClass==='all'||row.class_name.toLowerCase().replaceAll(' ','-')===selectedClass || (selectedClass==='functional' && row.class_name.toLowerCase()==='functional training'));
+        document.getElementById('schedule-results-count').textContent = rows.length;
+        scheduleList.innerHTML='';
+        scheduleEmpty.hidden=rows.length>0;
+        rows.forEach(item=>{
+            const row=document.createElement('div');row.className='schedule-row';
+            const available=Number(item.available);
+            const percent=100*available/Number(item.capacity);
+            const past=new Date(`${date}T${item.start_time}:00`)<=new Date();
+            row.innerHTML=`<div class="schedule-time"><strong>${escapeHtml(item.start_time)}</strong><span>Until ${endAt(item.start_time,item.duration)}</span></div>
+              <div class="schedule-class-info"><h4>${escapeHtml(item.class_name)}</h4><span class="schedule-category">${escapeHtml(item.room)}</span></div>
+              <div class="schedule-coach">${escapeHtml(item.coach)}</div>
+              <div class="schedule-availability"><span class="schedule-spots">${available} / ${item.capacity} spots</span><div class="schedule-spots-bar"><div class="schedule-spots-fill" style="width:${percent}%"></div></div></div>
+              <button type="button" class="schedule-book-btn" data-id="${item.id}" ${available===0||past?'disabled':''}>${past?'Finished':available===0?'Class Full':'Book Now'} <span>↗</span></button>`;
+            scheduleList.append(row);
+        });
+    } catch(err) { scheduleList.textContent=err.message; scheduleEmpty.hidden=true; }
+}
+function applyClassFromGroup() {
+    const stored=sessionStorage.getItem('selectedFitnessClass');
+    if(stored && [...scheduleFilter.options].some(o=>o.value===stored)) {
+        selectedClass=stored;scheduleFilter.value=stored;
+    }
+    sessionStorage.removeItem('selectedFitnessClass');
+    loadSchedule();
+}
+scheduleDays.forEach(day=>{
+    day.setAttribute('aria-pressed',String(day.classList.contains('active')));
+    day.addEventListener('click',()=>{
+        selectedDay=day.dataset.day;
+        scheduleDays.forEach(b=>{b.classList.toggle('active',b===day);b.setAttribute('aria-pressed',String(b===day));});
+        loadSchedule();
+    });
+});
+scheduleFilter.addEventListener('change',()=>{selectedClass=scheduleFilter.value;loadSchedule();});
+document.getElementById('schedule-reset').addEventListener('click',()=>{selectedClass='all';scheduleFilter.value='all';loadSchedule();});
+window.addEventListener('hashchange',()=>{
+    if(location.hash==='#working-hours') applyClassFromGroup();
+    if(location.hash==='#online-booking') loadBookingSelection();
+});
+scheduleList.addEventListener('click',event=>{
+    const btn=event.target.closest('.schedule-book-btn');
+    if(!btn||btn.disabled)return;
+    const row=displayedSessions.find(s=>Number(s.id)===Number(btn.dataset.id));
+    if(!row)return;
+    bookingSelection={...row,date:nextDateForDay(selectedDay)};
+    sessionStorage.setItem('bookingSelection',JSON.stringify(bookingSelection));
+    location.hash='#online-booking';
+    loadBookingSelection();
+});
+async function loadBookingSelection() {
+    const message=document.getElementById('booking-status');
+    message.textContent='';
+    try {bookingSelection=JSON.parse(sessionStorage.getItem('bookingSelection')||'null');}
+    catch {bookingSelection=null;}
+    const valid=bookingSelection&&bookingSelection.id&&bookingSelection.date;
+    document.getElementById('booking-submit').disabled=!valid;
+    if(!valid){message.textContent='Choose a class in Schedule first.';return;}
+    document.getElementById('booking-class').textContent=bookingSelection.class_name;
+    document.getElementById('booking-coach').textContent=bookingSelection.coach;
+    document.getElementById('booking-time').textContent=bookingSelection.start_time;
+    dateInput.value=bookingSelection.date;
+    dateInput.min=localISO(new Date());
+    const max=new Date(); max.setDate(max.getDate()+30); dateInput.max=localISO(max);
+    await checkBookingDate();
+}
+async function checkBookingDate() {
+    if(!bookingSelection)return;
+    const date=dateInput.value;
+    document.getElementById('booking-date-label').textContent=date||'—';
+    const status=document.getElementById('booking-status');
+    const btn=document.getElementById('booking-submit');btn.disabled=true;
+    if(!date)return;
+    const chosen=new Date(date+'T12:00:00');
+    const original=new Date(bookingSelection.date+'T12:00:00');
+    if(chosen.getDay()!==original.getDay()) {status.textContent='Choose the same weekday as your selected session.';return;}
+    try {
+        const result=await fetchPublicSchedule(date);
+        const live=result.sessions.find(row=>Number(row.id)===Number(bookingSelection.id));
+        if(!live){status.textContent='Session no longer available.';return;}
+        bookingSelection={...live,date};
+        document.getElementById('booking-spots').textContent=`${live.available} / ${live.capacity}`;
+        const past=new Date(`${date}T${live.start_time}:00`)<=new Date();
+        status.textContent=past?'This class has already started.':live.available<1?'This class is full.':'';
+        btn.disabled=past||live.available<1;
+    } catch(error){status.textContent=error.message;}
+}
+dateInput.addEventListener('change',checkBookingDate);
+bookingForm.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const btn=document.getElementById('booking-submit');const status=document.getElementById('booking-status');
+    if(!bookingSelection||btn.disabled)return;
+    btn.disabled=true;status.textContent='Confirming your reservation...';
+    const values=Object.fromEntries(new FormData(bookingForm));
+    try {
+        const result=await request('guest-book',{schedule_id:Number(bookingSelection.id),...values});
+        status.textContent=`✓ ${result.message} Reference #${result.booking_id}.`;
+        bookingForm.reset();sessionStorage.removeItem('bookingSelection');bookingSelection=null;
+        await loadSchedule();
+    } catch(error){status.textContent=error.message;btn.disabled=false;}
+});
+if(location.hash==='#working-hours')applyClassFromGroup();else loadSchedule();
+if(location.hash==='#online-booking')loadBookingSelection();

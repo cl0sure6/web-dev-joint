@@ -30,6 +30,7 @@ function database(): PDO
     $connection->exec('PRAGMA foreign_keys = ON; PRAGMA busy_timeout = 5000;');
     $connection->exec(file_get_contents(__DIR__ . '/schema.sql'));
     seed_content($connection);
+    seed_demo_schedule($connection);
     return $connection;
 }
 
@@ -75,7 +76,7 @@ function seed_content(PDO $connection): void
     }
     $questions = [
         ['How do I buy a membership?', 'Explore Memberships & Pricing, then send us an enquiry with your preferred plan. Our team will help you choose and arrange your first visit.'],
-        ['Can I cancel a class?', 'Yes. Open My bookings in your member account and cancel before the class starts. Your spot will become available to another member.'],
+        ['Can I cancel a class?', 'For member bookings, open My bookings in your account and cancel before the class starts. For guest reservations, contact the club team with your booking reference.'],
         ['Is there a student discount?', 'Yes. The Student plan offers daytime access with a valid student ID. See Memberships & Pricing for the current price.'],
         ['Can I use the pool?', 'Pool access depends on your membership and the swimming schedule. Ask the club to confirm what is included before you buy.'],
         ['What should I bring to my first session?', 'Comfortable sportswear, clean indoor trainers, a water bottle, and a towel. Bring swimwear and a swimming cap if you plan to use the pool.'],
@@ -86,6 +87,54 @@ function seed_content(PDO $connection): void
     }
     // Members, trainers, reviews, and events start empty; the admin adds real records.
     $connection->commit();
+}
+
+
+function seed_demo_schedule(PDO $connection): void
+{
+    // Only initialize demo timetable once, and only if club has no real schedule.
+    if ($connection->query("SELECT value FROM settings WHERE key = 'demo_schedule_initialized'")->fetchColumn()) return;
+    $connection->exec('BEGIN IMMEDIATE');
+    try {
+        // Another request may have initialized the schedule while this one waited for the lock.
+        if ($connection->query("SELECT value FROM settings WHERE key = 'demo_schedule_initialized'")->fetchColumn()) {
+            $connection->exec('COMMIT');
+            return;
+        }
+        if (!(int)$connection->query('SELECT COUNT(*) FROM schedule')->fetchColumn()
+            && !(int)$connection->query('SELECT COUNT(*) FROM classes')->fetchColumn()) {
+            $trainers = [
+                ['Sophia Williams','Yoga & Pilates',6], ['Olivia Brown','Pilates & Stretching',4],
+                ['Emma Thompson','Swimming',5], ['Alex Morgan','Functional Training',7],
+            ];
+            $insT = $connection->prepare('INSERT INTO trainers(name,specialization,experience) VALUES (?,?,?)');
+            $trainerIds = [];
+            foreach ($trainers as $trainer) { $insT->execute($trainer); $trainerIds[] = (int)$connection->lastInsertId(); }
+            $classes = [
+                ['Yoga', $trainerIds[0],15,60], ['Pilates',$trainerIds[1],12,50],
+                ['Swimming',$trainerIds[2],10,45], ['Stretching',$trainerIds[1],15,45],
+                ['Functional Training',$trainerIds[3],12,60], ['Aerobics',$trainerIds[0],20,50],
+            ];
+            $insC = $connection->prepare('INSERT INTO classes(name,trainer_id,capacity,duration) VALUES (?,?,?,?)');
+            $classIds = [];
+            foreach ($classes as $class) { $insC->execute($class); $classIds[] = (int)$connection->lastInsertId(); }
+            $entries = [
+                1=>[[0,'08:00'],[1,'10:00'],[2,'12:00'],[4,'17:00'],[5,'19:00']],
+                2=>[[3,'08:00'],[2,'10:00'],[0,'12:00'],[1,'17:00'],[4,'19:00']],
+                3=>[[0,'08:00'],[5,'10:00'],[1,'12:00'],[2,'17:00'],[3,'19:00']],
+                4=>[[4,'08:00'],[0,'10:00'],[2,'12:00'],[5,'17:00'],[1,'19:00']],
+                5=>[[3,'08:00'],[1,'10:00'],[4,'12:00'],[0,'17:00'],[5,'19:00']],
+                6=>[[0,'09:00'],[2,'11:00'],[4,'13:00'],[5,'16:00']],
+                7=>[[3,'09:00'],[0,'11:00'],[1,'13:00']],
+            ];
+            $insS = $connection->prepare('INSERT INTO schedule(class_id,weekday,start_time,room) VALUES (?,?,?,?)');
+            foreach ($entries as $day=>$times) foreach ($times as [$ix,$time]) {
+                $insS->execute([$classIds[$ix],$day,$time,'Studio '.($ix+1)]);
+            }
+        }
+        $connection->prepare("INSERT OR REPLACE INTO settings(key,value) VALUES('demo_schedule_initialized','1')")->execute();
+        $connection->exec('COMMIT');
+    } catch (Throwable $e) { $connection->exec('ROLLBACK'); throw $e; }
 }
 
 function start_session(): void

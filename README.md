@@ -19,7 +19,8 @@ Open http://127.0.0.1:8000. SQLite tables are created automatically; existing da
 - Passwords require 12–72 bytes. Profile changes require the current password. Password changes invalidate other member sessions.
 - Members can book classes up to 28 days ahead and cancel before the start time, using the configured club timezone. Capacity checks run under a SQLite write lock. Cancelled bookings can be booked again.
 - Classes are open to registered members regardless of membership status. Membership information is displayed separately; this project does not process online payments.
-- The admin creates trainers, classes and weekly schedules in the existing administration panel. New installations show empty states until records are added; no demo bookings or members are inserted.
+- The admin manages trainers, classes and weekly schedules in the existing administration panel. An empty timetable is initialized once with demo trainers and classes; existing schedules are preserved. No demo bookings or members are inserted.
+- Public Schedule and Online booking allow guest reservations up to 30 days ahead. Guest and member bookings share the same class capacity. Guest reservations remain separate from member accounts; members use their account schedule to keep bookings in My bookings.
 - **Assign member memberships** in the admin sidebar opens `/admin/member-plans.php`. Select a member, plan and start date. The end date uses the plan duration; overlapping active assignments are rejected.
 - Reviews remain subject to administrator approval.
 

@@ -108,3 +108,18 @@ CREATE TABLE IF NOT EXISTS user_memberships (
 CREATE INDEX IF NOT EXISTS booking_availability ON bookings(schedule_id, date, status);
 CREATE INDEX IF NOT EXISTS member_plans ON user_memberships(user_id, ends_on);
 
+
+
+-- Public guest reservations (do not silently create member accounts).
+CREATE TABLE IF NOT EXISTS guest_bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    schedule_id INTEGER NOT NULL REFERENCES schedule(id) ON DELETE RESTRICT,
+    date TEXT NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL COLLATE NOCASE,
+    phone TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'confirmed' CHECK (status IN ('confirmed','cancelled')),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(schedule_id, date, email)
+);
+CREATE INDEX IF NOT EXISTS idx_guest_booking_capacity ON guest_bookings(schedule_id,date,status);
