@@ -287,3 +287,750 @@ input::placeholder, textarea::placeholder { color: #75776e; }
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition: none !important; }
 }
+
+
+
+
+/* ========================================
+   COACHES PAGE
+======================================== */
+
+/* Header */
+
+.coaches-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 55px;
+}
+
+.coaches-header h2 {
+    font-size: clamp(40px, 5vw, 68px);
+    margin: 15px 0 20px;
+    letter-spacing: -0.05em;
+}
+
+.orange-dot {
+    color: #e34b2b;
+}
+
+.coaches-description {
+    max-width: 600px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #686960;
+}
+
+/* Trainers counter */
+
+.coaches-count {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.coaches-count span {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -5px;
+    color: #e34b2b;
+}
+
+.coaches-count p {
+    font-size: 11px;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    margin-top: 12px;
+    color: #686960;
+}
+
+/* Filters */
+
+.coach-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #d9d9d1;
+}
+
+.coach-filter {
+    padding: 12px 22px;
+    border: 1px solid #d9d9d1;
+    background: transparent;
+    color: #252621;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.25s ease;
+}
+
+.coach-filter:hover {
+    border-color: #e34b2b;
+    color: #e34b2b;
+}
+
+.coach-filter.active {
+    background: #e34b2b;
+    border-color: #e34b2b;
+    color: white;
+}
+
+/* Grid */
+
+.coaches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 45px 25px;
+}
+
+/* Card */
+
+.coach-card {
+    min-width: 0;
+}
+
+.coach-card[hidden] {
+    display: none;
+}
+
+/* Image */
+
+.coach-image {
+    position: relative;
+    overflow: hidden;
+    background: #e1e1d8;
+    aspect-ratio: 4 / 4.5;
+}
+
+.coach-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8);
+    transition: transform 0.5s ease,
+                filter 0.5s ease;
+}
+
+.coach-card:hover .coach-image img {
+    transform: scale(1.04);
+    filter: saturate(1);
+}
+
+.coach-number {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    padding: 7px 12px;
+    background: #f5f4ed;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* Information */
+
+.coach-info {
+    padding-top: 25px;
+}
+
+.coach-specialization {
+    color: #e34b2b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.coach-info h3 {
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.coach-experience {
+    color: #686960;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.coach-bio {
+    color: #686960;
+    font-size: 14px;
+    line-height: 1.8;
+    min-height: 80px;
+    margin-bottom: 23px;
+}
+
+/* Booking Button */
+
+.coach-book-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border: 1px solid #252621;
+    background: transparent;
+    color: #252621;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.25s ease;
+}
+
+.coach-book-btn span {
+    font-size: 20px;
+    transition: transform 0.25s;
+}
+
+.coach-book-btn:hover {
+    background: #e34b2b;
+    border-color: #e34b2b;
+    color: white;
+}
+
+.coach-book-btn:hover span {
+    transform: translate(3px, -3px);
+}
+
+/* Bottom CTA */
+
+.coaches-bottom {
+    margin-top: 100px;
+    padding: 45px 50px;
+    background: #e4e8dc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.coaches-bottom h2 {
+    font-size: clamp(30px, 3vw, 42px);
+    margin: 15px 0;
+}
+
+.coaches-bottom p:not(.eyebrow) {
+    font-size: 14px;
+    color: #686960;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 1000px) {
+
+    .coaches-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .coaches-header h2 {
+        font-size: 50px;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .coaches-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
+    .coaches-header h2 {
+        font-size: 40px;
+    }
+
+    .coaches-count {
+        text-align: left;
+    }
+
+    .coaches-count span {
+        font-size: 55px;
+    }
+
+    .coaches-grid {
+        grid-template-columns: 1fr;
+        gap: 45px;
+    }
+
+    .coach-filters {
+        gap: 8px;
+    }
+
+    .coach-filter {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    .coaches-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 30px 25px;
+        margin-top: 65px;
+    }
+
+    .coach-bio {
+        min-height: auto;
+    }
+
+}
+
+/* ========================================
+   GROUP EXERCISES PAGE
+======================================== */
+
+/* Header */
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 50px;
+    margin-bottom: 55px;
+}
+
+.group-header-content {
+    max-width: 760px;
+}
+
+.group-header h2 {
+    font-size: clamp(40px, 5vw, 70px);
+    line-height: 1.08;
+    letter-spacing: -0.055em;
+    margin: 18px 0 25px;
+}
+
+.group-accent {
+    color: var(--accent);
+}
+
+.group-description {
+    max-width: 580px;
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--muted);
+}
+
+.group-header-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.group-stat-number {
+    font-size: 85px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -5px;
+}
+
+.group-stat-label {
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: right;
+    line-height: 1.6;
+    color: var(--muted);
+}
+
+
+/* ========================================
+   FILTERS
+======================================== */
+
+.group-filter-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding-bottom: 25px;
+    margin-bottom: 40px;
+
+    border-bottom: 1px solid var(--line);
+}
+
+.group-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.group-filter {
+    padding: 12px 22px;
+
+    border: 1px solid var(--line);
+    border-radius: 2px;
+
+    background: transparent;
+    color: var(--ink);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.group-filter:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.group-filter.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.group-results {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+
+/* ========================================
+   CLASSES GRID
+======================================== */
+
+.group-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 45px 25px;
+}
+
+
+/* ========================================
+   CLASS CARD
+======================================== */
+
+.group-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.group-card[hidden] {
+    display: none;
+}
+
+
+/* IMAGE */
+
+.group-card-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3.6;
+
+    background: #e1e1d8;
+}
+
+.group-card-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.5s ease;
+}
+
+.group-card:hover .group-card-image img {
+    transform: scale(1.05);
+}
+
+
+/* IMAGE LABEL */
+
+.group-card-label {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+
+    padding: 8px 12px;
+
+    background: var(--paper);
+    color: var(--ink);
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.group-card-index {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+
+    padding: 7px 12px;
+
+    background: rgba(37, 39, 33, 0.8);
+    color: white;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* CONTENT */
+
+.group-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    padding-top: 24px;
+}
+
+.group-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.group-card-top h3 {
+    font-size: 27px;
+    letter-spacing: -1px;
+    font-weight: 700;
+}
+
+
+/* LEVEL BADGES */
+
+.group-level {
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.group-level.beginner {
+    background: #dbe8d2;
+    color: #345b30;
+}
+
+.group-level.intermediate {
+    background: #f1e6cb;
+    color: #80601e;
+}
+
+.group-level.advanced {
+    background: #f2d9d1;
+    color: #a43c27;
+}
+
+
+/* DESCRIPTION */
+
+.group-card-description {
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+
+    margin-bottom: 24px;
+}
+
+
+/* CLASS DETAILS */
+
+.group-card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+    padding: 18px 0;
+    margin-top: auto;
+
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.group-card-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.group-card-details span {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--muted);
+}
+
+.group-card-details strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   VIEW SCHEDULE BUTTON
+======================================== */
+
+.group-schedule-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    margin-top: 20px;
+    padding: 16px 20px;
+
+    border: 1px solid var(--ink);
+
+    background: transparent;
+    color: var(--ink);
+
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: 0.25s ease;
+}
+
+.group-schedule-btn span {
+    font-size: 20px;
+    transition: transform 0.25s ease;
+}
+
+.group-schedule-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.group-schedule-btn:hover span {
+    transform: translate(3px, -3px);
+}
+
+
+/* ========================================
+   BOTTOM CTA
+======================================== */
+
+.group-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    margin-top: 100px;
+    padding: 45px 50px;
+
+    background: var(--green);
+}
+
+.group-bottom h2 {
+    margin: 15px 0;
+
+    font-size: clamp(28px, 3vw, 42px);
+}
+
+.group-bottom p:not(.eyebrow) {
+    max-width: 500px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.group-bottom .button {
+    flex-shrink: 0;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 1000px) {
+
+    .group-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .group-header h2 {
+        font-size: 50px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .group-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+    }
+
+    .group-header h2 {
+        font-size: 40px;
+    }
+
+    .group-header-stat {
+        align-items: flex-start;
+    }
+
+    .group-stat-number {
+        font-size: 55px;
+    }
+
+    .group-stat-label {
+        text-align: left;
+    }
+
+    .group-filter-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .group-filters {
+        gap: 8px;
+    }
+
+    .group-filter {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    .group-grid {
+        grid-template-columns: 1fr;
+        gap: 45px;
+    }
+
+    .group-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+
+        margin-top: 65px;
+        padding: 30px 25px;
+    }
+
+    .group-bottom .button {
+        width: 100%;
+    }
+
+}

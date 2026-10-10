@@ -171,3 +171,192 @@ async function loadClub() {
     }
 }
 loadClub();
+
+
+
+// ========================================
+// COACHES PAGE FUNCTIONALITY
+// ========================================
+
+// Coach filtering
+
+const coachFilters = document.querySelectorAll(".coach-filter");
+const coachCards = document.querySelectorAll(".coach-card");
+
+coachFilters.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const selectedCategory = button.dataset.filter;
+
+        // Remove active class from all buttons
+        coachFilters.forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        // Activate clicked button
+        button.classList.add("active");
+
+        // Filter coach cards
+        coachCards.forEach(card => {
+
+            const coachCategory = card.dataset.category;
+
+            if (
+                selectedCategory === "all" ||
+                selectedCategory === coachCategory
+            ) {
+                card.hidden = false;
+            } else {
+                card.hidden = true;
+            }
+
+        });
+
+    });
+
+});
+
+
+// ========================================
+// BOOK A SESSION
+// ========================================
+
+const coachBookingButtons =
+    document.querySelectorAll(".coach-book-btn");
+
+coachBookingButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const coachName = button.dataset.coach;
+
+        // Get existing contact form
+        const contactMessage = document.querySelector(
+            "#contact-form textarea[name='message']"
+        );
+
+        // Automatically insert selected coach
+        if (contactMessage) {
+
+            contactMessage.value =
+                `Hello! I would like to book a personal training session with ${coachName}. Please contact me with available dates and times.`;
+
+        }
+
+        // Redirect to contact section
+        window.location.hash = "contacts";
+
+    });
+
+});
+
+// ========================================
+// GROUP EXERCISES FUNCTIONALITY
+// ========================================
+
+
+// FILTER ELEMENTS
+
+const groupFilterButtons =
+    document.querySelectorAll(".group-filter");
+
+const groupCards =
+    document.querySelectorAll(".group-card");
+
+const groupCount =
+    document.getElementById("group-count");
+
+
+// ========================================
+// FILTER CLASSES BY DIFFICULTY
+// ========================================
+
+groupFilterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        // Selected difficulty
+        const selectedLevel = button.dataset.level;
+
+
+        // Remove active state
+        groupFilterButtons.forEach(btn => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+        });
+
+
+        // Activate selected filter
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+
+
+        // Count visible classes
+        let visibleClasses = 0;
+
+
+        // Filter cards
+        groupCards.forEach(card => {
+
+            const cardLevel = card.dataset.level;
+
+            const shouldShow =
+                selectedLevel === "all" ||
+                selectedLevel === cardLevel;
+
+
+            // Show or hide card
+            card.hidden = !shouldShow;
+
+
+            if (shouldShow) {
+                visibleClasses++;
+            }
+
+        });
+
+
+        // Update counter
+        groupCount.textContent = visibleClasses;
+
+    });
+
+});
+
+
+// Set initial filter accessibility state
+
+groupFilterButtons.forEach(button => {
+    button.setAttribute(
+        "aria-pressed",
+        String(button.classList.contains("active"))
+    );
+});
+
+
+// ========================================
+// VIEW SCHEDULE BUTTON
+// ========================================
+
+// Remember the selected class.
+// The Schedule page will use this in the next stage.
+
+const groupScheduleButtons =
+    document.querySelectorAll(".group-schedule-btn");
+
+groupScheduleButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const selectedClass = button.dataset.class;
+
+        // Save class selection in this browser tab
+        sessionStorage.setItem(
+            "selectedFitnessClass",
+            selectedClass
+        );
+
+    });
+
+});
