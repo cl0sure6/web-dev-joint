@@ -13,7 +13,10 @@ if ($user['role'] !== 'user') { http_response_code(403); exit('This area is for 
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="csrf-token" content="<?= escape($_SESSION['csrf']) ?>"><title>My account — FORM</title><link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="style.css"><script src="script.js" defer></script></head>
 <body class="member-page">
-<a class="skip-link" href="#member-content">Skip to content</a>
+    
+<a class="skip-link" href="#member-content">
+    Skip to content
+</a>
 <header class="member-header"><a class="logo" href="../index.html"><span class="logo-mark" aria-hidden="true">ƒ</span> FORM<span class="logo-caption">FITNESS CLUB</span></a><a class="back-to-club" href="../index.html">Back to the club ↗</a><form method="post" action="logout.php"><input type="hidden" name="csrf" value="<?= escape($_SESSION['csrf']) ?>"><button type="submit" class="member-signout">Sign out</button></form></header>
 <div class="member-layout"><aside class="member-sidebar"><p class="eyebrow">YOUR SPACE</p><nav aria-label="Member account"><a href="#overview" aria-current="page"><span>01</span> Overview</a><a href="#schedule"><span>02</span> Schedule</a><a href="#bookings"><span>03</span> My bookings</a><a href="#profile"><span>04</span> My profile</a></nav><a class="member-review" href="../index.html#review-form">Share your story ↗</a><p class="sidebar-note">A little stronger.<br>Every day.</p></aside>
 <main id="member-content" class="member-main">

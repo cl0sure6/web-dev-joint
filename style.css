@@ -102,6 +102,13 @@ input::placeholder, textarea::placeholder { color: #75776e; }
 .menu-toggle { display: none; }
 
 /* Home */
+.home-member { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1280px; margin: 24px auto 0; padding: 22px 28px; background: var(--green); }
+.home-member-name { font-size: 20px; font-weight: bold; overflow-wrap: anywhere; }
+#home-auth-notice { font-size: 16px; }
+.home-member-actions { display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+.home-member-actions .text-link, .home-member-actions .button { font-size: 16px; }
+@media (max-width: 1400px) { .home-member { margin-left: 6%; margin-right: 6%; } }
+@media (max-width: 700px) { .home-member { flex-direction: column; align-items: flex-start; padding: 20px; } .home-member-actions { flex-wrap: wrap; flex-shrink: 1; } }
 .hero-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; max-width: 1280px; margin: 0 auto; padding: 48px 0; gap: 40px; }
 .hero-copy { padding: 30px 0 10px; }
 .hero-copy .eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 26px; }

@@ -157,6 +157,14 @@ async function loadClub() {
         const session = await request('session');
         csrfToken = session.csrf;
         if (session.user) {
+            document.getElementById('home-member-name').textContent = `Welcome, ${session.user.name}!`;
+            document.getElementById('home-logout-csrf').value = session.csrf;
+            document.getElementById('home-member').hidden = false;
+            try {
+                const notice = sessionStorage.getItem('formAuthNotice');
+                if (notice) document.getElementById('home-auth-notice').textContent = notice;
+                sessionStorage.removeItem('formAuthNotice');
+            } catch { /* The member controls do not depend on browser storage. */ }
             document.querySelectorAll('[data-account-link]').forEach(accountLink => {
             accountLink.textContent = session.user.role === 'admin' ? 'Administration ↗' : 'My account ↗';
             accountLink.href = session.user.role === 'admin' ? 'admin/index.php' : 'account/index.php';

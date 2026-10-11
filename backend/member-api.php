@@ -81,7 +81,10 @@ function member_action(string $action, array $input, PDO $db): void
         if (!throttle($action, $action === 'member-register' ? 5 : 10, 600)) respond(['error' => 'Too many attempts. Please try again in 10 minutes.'], 429);
         $email = member_email($input);
         if ($action === 'member-register') {
-            $name = text_field($input, 'name', 100);
+            $firstName = text_field($input, 'first_name', 49);
+            $lastName = text_field($input, 'last_name', 50);
+            // Keep the existing full-name storage compatible with profiles and bookings.
+            $name = $firstName . ' ' . $lastName;
             $password = member_password($input);
             if ($password !== ($input['password_confirmation'] ?? null)) respond(['error' => 'The passwords do not match.'], 422);
             try {

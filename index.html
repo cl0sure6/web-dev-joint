@@ -35,6 +35,10 @@
     <main id="main-content">
         <!-- Home -->
         <section id="home" class="hero-section page-section" aria-labelledby="home-heading">
+            <div id="home-member" class="home-member" hidden>
+                <div><p id="home-member-name" class="home-member-name"></p><p id="home-auth-notice" role="status" aria-live="polite"></p></div>
+                <div class="home-member-actions"><a data-account-link href="account/index.php" class="text-link">My account ↗</a><form action="account/logout.php" method="post"><input id="home-logout-csrf" type="hidden" name="csrf"><button type="submit" class="button button--outline">Sign out</button></form></div>
+            </div>
             <div class="hero-grid">
                 <div class="hero-copy">
                     <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> MAKE ROOM FOR MOVEMENT</p>
@@ -101,13 +105,13 @@
         <!-- Exercise zones -->
         <section id="sport-zones" class="zones-section page-section section-shell" aria-labelledby="zones-heading">
             <header class="zones-intro">
-                <p class="eyebrow">SPACE TO MOVE</p>
                 <h2 id="zones-heading">Four zones. Your kind of training.</h2>
                 <p>Choose a space that fits your goal — from building strength to slowing down.</p>
             </header>
+
             <div class="zones-grid">
                 <article class="zone-card">
-                    <img class="zone-image" src="assets/zone-strength.png" alt="Dumbbells, benches and squat racks in the strength training area" width="1536" height="1024" loading="lazy">
+                    <img class="zone-image" src="assets/zone-strength.png" alt="" width="1536" height="1024" loading="lazy">
                     <div class="zone-copy">
                         <p class="eyebrow">01 / BUILD STRENGTH</p>
                         <h3>Strength Zone</h3>
@@ -116,6 +120,7 @@
                         <a href="#coaches" class="text-link">Meet our coaches <span aria-hidden="true">↗</span></a>
                     </div>
                 </article>
+
                 <article class="zone-card">
                     <img class="zone-image" src="assets/zone-cardio.png" alt="Treadmills and exercise bikes beside large gym windows" width="1536" height="1024" loading="lazy">
                     <div class="zone-copy">
@@ -150,6 +155,11 @@
                 <a href="#contacts" class="button">Plan your first visit <span aria-hidden="true">↗</span></a>
             </div>
         </section>
+
+
+
+
+
         <!-- COACHES PAGE -->
         <section id="coaches" class="coaches-section page-section section-shell">
 

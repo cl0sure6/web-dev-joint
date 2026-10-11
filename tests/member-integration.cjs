@@ -41,8 +41,16 @@ function client(){let c={};api(c,'session');return c;}
 const a=client(),b=client(),guest=client();
 api(guest,'member-data',null,401);
 check(true,'Anonymous requests are rejected');
-api(a,'member-register',{name:'Alice Example',email:'alice@test.example',password:pass,password_confirmation:pass,role:'admin'});
-api(b,'member-register',{name:'Bob Example',email:'bob@test.example',password:pass,password_confirmation:pass});
+api(guest,'member-register',{first_name:'',last_name:'Example',email:'invalid1@test.example',password:pass,password_confirmation:pass},422);
+api(guest,'member-register',{first_name:'Alice',email:'invalid2@test.example',password:pass,password_confirmation:pass},422);
+check(true,'Registration requires both first and last names');
+const registrationPage=request({},'account/login.php','mode=register');
+check(registrationPage.text.includes('name="first_name"')&&registrationPage.text.includes('name="last_name"'),'Registration page renders separate name fields');
+api(a,'member-register',{first_name:'Alice',last_name:'Example',email:'alice@test.example',password:pass,password_confirmation:pass,role:'admin'});
+api(b,'member-register',{first_name:'Bob',last_name:'Example',email:'bob@test.example',password:pass,password_confirmation:pass});
+assert.equal(api(a,'session').user.name,'Alice Example');
+const signedInRedirect=request(a,'account/login.php');
+check(signedInRedirect.code===302&&signedInRedirect.headers.includes('Location: ../index.html'),'Signed-in members return to the home page');
 let data=api(a,'member-data');
 check(data.user.role==='user'&&!('password_hash'in data.user),'Registration forces member role; password hash stays private');
 check(data.bookings.length===0&&data.membership===null,'New member has honest empty states');
@@ -109,6 +117,7 @@ check(page.text.includes('lang="en"')&&page.text.includes('My bookings'),'Protec
 fs.writeFileSync(path.join(runtime,'account-render.html'),page.text);
 fs.writeFileSync(path.join(runtime,'login-render.html'),request({},'account/login.php').text);
 response=request(a,'account/logout.php','',{csrf:a.csrf},true);assert.equal(response.code,302);
+assert.ok(response.headers.includes('Location: ../index.html'));
 api(a,'member-data',null,401);
 check(true,'Logout clears authentication');
 console.log(`${checks} integration groups passed.`);

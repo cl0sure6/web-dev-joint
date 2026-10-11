@@ -10,6 +10,7 @@ $config = [
     'database_schema' => 'public',
     'timezone' => 'Asia/Qyzylorda',
 ];
+
 if (is_file(dirname(__DIR__) . '/config.local.php')) {
     $config = array_replace($config, require dirname(__DIR__) . '/config.local.php');
 }

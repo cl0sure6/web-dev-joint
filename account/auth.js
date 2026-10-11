@@ -20,7 +20,12 @@ authForm.addEventListener('submit', async (event) => {
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Please try again.');
-        window.location.href = 'index.php';
+        try {
+            sessionStorage.setItem('formAuthNotice', authForm.dataset.action === 'member-register'
+                ? 'Your account has been created. Welcome to FORM!'
+                : 'You have signed in successfully.');
+        } catch { /* Navigation also works when browser storage is unavailable. */ }
+        window.location.href = '../index.html';
     } catch (error) {
         status.textContent = error instanceof TypeError || error instanceof SyntaxError ? 'We could not reach the club. Please try again shortly.' : error.message;
         status.classList.add('form-status--error');
